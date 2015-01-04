@@ -1,2 +1,39 @@
-<h1>Map#map</h1>
-<p>Find me in app/views/map/map.html.erb</p>
+<ul>
+  <% @things.each do |thing| %>
+    <li>
+      <%= thing.name %>: <%= thing.category %>
+      (
+        <% thing.instances.each do |instance| %><%= instance.space_time.name %>,<% end %>
+      )
+    </li>
+  <% end %>
+</ul>
+
+<ul>
+  <%@space_time_events.each do |space_time, events| %>
+    <li>
+      <%= space_time.name %>:
+      <ul>
+        <% events.each do |event| %>
+          <li>
+            [
+              <% if not event.when.nil? %><%= event.when %> -<% end %>
+              <%= event.location.thing.name %>
+            ]
+            <%= event.summary %>
+            <br />
+            Involving:
+            <% event.participants.each do |p| %>
+              <%= p.thing.name %> (<%= p.space_time.name %>),
+            <% end %>
+            <ul>
+              <% event.sub_events.each do |sub_event| %>
+                <li><%= sub_event.description %></li>
+              <% end %>
+            </ul>
+          </li>
+        <% end %>
+      </ul>
+    </li>
+  <% end %>
+</ul>

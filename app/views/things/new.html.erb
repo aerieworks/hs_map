@@ -1,0 +1,24 @@
+<h1>Homestuck Map > Things</h1>
+<fieldset class="entity-form">
+  <legend>New Thing</legend>
+  <%= form_for @thing do |f| %>
+    <div class="entity-form-field">
+      <%= f.label :name %><%= f.text_field :name %>
+    </div>
+    <div class="entity-form-field">
+      <%= f.label :category %>
+      <%= f.select :category, Hash[Thing.categories.keys.collect { |x| [x, x] }] %>
+    </div>
+    <%= f.fields_for :instances do |i_f| %>
+      <div class="entity-form-field">
+        <%= i_f.label 'SpaceTime', :space_time_id %>
+        <%= i_f.collection_select :space_time_id, @space_times, :id, :name %>
+      </div>
+    <% end %>
+    <div class="entity-form-actions">
+      <%= f.submit %>
+      <%= link_to 'Cancel', things_path %>
+    </div>
+  <% end %>
+</fieldset>
+

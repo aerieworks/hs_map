@@ -1,0 +1,7 @@
+<h1>Homestuck Maps > Things</h1>
+<%= link_to 'Add New Thing', new_thing_path %>
+<ul>
+  <% @things.each do |thing| %>
+    <li><%= link_to thing.name, [ :edit, thing ] %></li>
+  <% end %>
+</ul>
