@@ -1,4 +1,6 @@
 class ThingsController < ApplicationController
+  before_action :set_breadcrumbs
+
   def index
     @things = Thing.includes(instances: [ :space_time ]).all
   end
@@ -72,6 +74,10 @@ class ThingsController < ApplicationController
   end
 
   private
+  def set_breadcrumbs
+    @breadcrumbs = [ { text: 'Things', path: things_path } ]
+  end
+
   def init_form_view_model(thing)
     @space_times = SpaceTime.all
     @thing = thing
