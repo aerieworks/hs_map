@@ -11,31 +11,29 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150104042906) do
+ActiveRecord::Schema.define(version: 20150104174517) do
 
   create_table "event_participants", force: :cascade do |t|
-    t.integer  "event_id",          limit: 4, null: false
-    t.integer  "thing_instance_id", limit: 4, null: false
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
+    t.integer  "event_id",            limit: 4, null: false
+    t.integer  "thing_instance_id",   limit: 4, null: false
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+    t.integer  "sequence_index",      limit: 4, null: false
+    t.boolean  "is_index_known",      limit: 1, null: false
+    t.integer  "location_id",         limit: 4
+    t.integer  "local_time",          limit: 4, null: false
+    t.boolean  "is_local_time_known", limit: 1, null: false
   end
 
   add_index "event_participants", ["event_id"], name: "index_event_participants_on_event_id", using: :btree
+  add_index "event_participants", ["location_id"], name: "index_event_participants_on_location_id", using: :btree
   add_index "event_participants", ["thing_instance_id"], name: "index_event_participants_on_thing_instance_id", using: :btree
 
   create_table "events", force: :cascade do |t|
-    t.integer  "space_time_id",  limit: 4,  null: false
-    t.integer  "sequence_index", limit: 4,  null: false
-    t.boolean  "is_index_known", limit: 1,  null: false
-    t.string   "when",           limit: 50
-    t.string   "summary",        limit: 50, null: false
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
-    t.integer  "location_id",    limit: 4
+    t.string   "summary",    limit: 50, null: false
+    t.datetime "created_at",            null: false
+    t.datetime "updated_at",            null: false
   end
-
-  add_index "events", ["location_id"], name: "index_events_on_location_id", using: :btree
-  add_index "events", ["space_time_id"], name: "index_events_on_space_time_id", using: :btree
 
   create_table "group_members", force: :cascade do |t|
     t.integer  "group_id",          limit: 4, null: false
@@ -98,10 +96,17 @@ ActiveRecord::Schema.define(version: 20150104042906) do
     t.datetime "updated_at",            null: false
   end
 
+  create_table "times", force: :cascade do |t|
+    t.integer "space_time_id",  limit: 4,  null: false
+    t.integer "sequence_index", limit: 4,  null: false
+    t.string  "description",    limit: 50, null: false
+  end
+
+  add_index "times", ["space_time_id", "sequence_index"], name: "index_times_on_space_time_id_and_sequence_index", unique: true, using: :btree
+
   add_foreign_key "event_participants", "events"
   add_foreign_key "event_participants", "thing_instances"
-  add_foreign_key "events", "space_times"
-  add_foreign_key "events", "thing_instances", column: "location_id"
+  add_foreign_key "event_participants", "thing_instances", column: "location_id"
   add_foreign_key "group_members", "events", column: "joined_at_id"
   add_foreign_key "group_members", "groups"
   add_foreign_key "group_members", "thing_instances"
@@ -110,4 +115,5 @@ ActiveRecord::Schema.define(version: 20150104042906) do
   add_foreign_key "thing_instances", "space_times"
   add_foreign_key "thing_instances", "thing_instances", column: "initial_location_id"
   add_foreign_key "thing_instances", "things"
+  add_foreign_key "times", "space_times"
 end
