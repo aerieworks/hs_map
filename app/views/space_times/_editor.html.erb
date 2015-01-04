@@ -1,0 +1,13 @@
+<%= form_for space_time do |f| %>
+  <div class="entity-field">
+    <%= f.label :name %><%= f.text_field :name %>
+  </div>
+  <div class="entity-form-actions">
+    <%= f.submit %>
+    <% if space_time.new_record? %>
+      <%= link_to 'Cancel', space_times_path %>
+    <% else %>
+      <%= link_to 'Cancel', space_time_path %>
+    <% end %>
+  </div>
+<% end %>

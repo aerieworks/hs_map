@@ -1,0 +1,6 @@
+<%= link_to 'Add New SpaceTime', new_space_time_path %>
+<ul>
+  <% @space_times.each do |space_time| %>
+    <li><%= link_to space_time.name, space_time %></li>
+  <% end %>
+</ul>
