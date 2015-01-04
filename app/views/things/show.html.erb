@@ -1,4 +1,4 @@
-<h1>Homestuck Maps > <%= link_to 'Things', things_path %></h1>
+<h1>Homestuck Maps > <%= link_to 'Editor', edit_map_path %> > <%= link_to 'Things', things_path %></h1>
 <h2><%= @thing.name %></h2>
 <%= link_to 'edit', [ :edit, @thing ] %>
 <%= link_to 'add instance', new_thing_instance_path(@thing) %>

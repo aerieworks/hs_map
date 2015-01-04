@@ -1,4 +1,4 @@
-<h1>Homestuck Maps > <%= link_to 'Things', things_path %></h1>
+<h1>Homestuck Maps > <%= link_to 'Editor', edit_map_path %> > <%= link_to 'Things', things_path %></h1>
 <fieldset class="entity-form">
   <legend>New Thing</legend>
   <%= render partial: 'editor', locals: {thing: @thing, space_times: @space_times} %>

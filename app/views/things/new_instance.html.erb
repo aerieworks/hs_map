@@ -1,4 +1,4 @@
-<h1>Homestuck Maps > <%= link_to 'Things', things_path %></h1>
+<h1>Homestuck Maps > <%= link_to 'Editor', edit_map_path %> > <%= link_to 'Things', things_path %></h1>
 <h2>Add Instance of <%= @instance.thing.name %></h2>
 <%= render partial: 'viewer', locals: { thing: @instance.thing } %>
 <fieldset class="entity-form">

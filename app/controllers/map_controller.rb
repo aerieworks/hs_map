@@ -1,4 +1,7 @@
 class MapController < ApplicationController
+  def edit
+  end
+
   def map
     @things = Thing.includes(instances: [ :space_time ])
 
