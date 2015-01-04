@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150104174517) do
+ActiveRecord::Schema.define(version: 20150104224346) do
 
   create_table "event_participants", force: :cascade do |t|
     t.integer  "event_id",            limit: 4, null: false
@@ -96,13 +96,13 @@ ActiveRecord::Schema.define(version: 20150104174517) do
     t.datetime "updated_at",            null: false
   end
 
-  create_table "times", force: :cascade do |t|
+  create_table "time_labels", force: :cascade do |t|
     t.integer "space_time_id",  limit: 4,  null: false
     t.integer "sequence_index", limit: 4,  null: false
     t.string  "description",    limit: 50, null: false
   end
 
-  add_index "times", ["space_time_id", "sequence_index"], name: "index_times_on_space_time_id_and_sequence_index", unique: true, using: :btree
+  add_index "time_labels", ["space_time_id", "sequence_index"], name: "index_time_labels_on_space_time_id_and_sequence_index", unique: true, using: :btree
 
   add_foreign_key "event_participants", "events"
   add_foreign_key "event_participants", "thing_instances"
@@ -115,5 +115,5 @@ ActiveRecord::Schema.define(version: 20150104174517) do
   add_foreign_key "thing_instances", "space_times"
   add_foreign_key "thing_instances", "thing_instances", column: "initial_location_id"
   add_foreign_key "thing_instances", "things"
-  add_foreign_key "times", "space_times"
+  add_foreign_key "time_labels", "space_times"
 end

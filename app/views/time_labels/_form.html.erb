@@ -1,0 +1,35 @@
+<%= form_for(@time_label) do |f| %>
+  <% if @time_label.errors.any? %>
+    <div class="entity-error-explanation">
+      <h2><%= pluralize(@time_label.errors.count, "error") %> prohibited this TimeLabel from being saved:</h2>
+
+      <ul>
+      <% @time_label.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="entity-field">
+    <%= f.label :space_time_id, 'SpaceTime' %>
+    <%= f.collection_select :space_time_id, @space_times, :id, :name %>
+  </div>
+  <div class="entity-field">
+    <%= f.label :sequence_index %>
+    <%= f.number_field :sequence_index, minimum: 0, step: 1 %>
+  </div>
+  <div class="entity-field">
+    <%= f.label :description %>
+    <%= f.text_field :description, size: 50, maximum: 50 %>
+  </div>
+
+  <div class="entity-form-actions">
+    <%= f.submit %>
+    <% if @time_label.new_record? %>
+      <%= link_to 'Cancel', time_labels_path %>
+    <% else %>
+      <%= link_to 'Cancel', time_label_path %>
+    <% end %>
+  </div>
+<% end %>

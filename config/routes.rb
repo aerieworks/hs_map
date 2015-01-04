@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   get 'edit' => 'map#edit', as: :edit_map
 
   resources :space_times
+  resources :time_labels
 
   resources :things
   get 'things/:id/new_instance' => 'things#new_instance', as: :new_thing_instance
