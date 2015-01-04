@@ -2,9 +2,18 @@
   margin: 2px 0;
 }
 
-.entity-field > label {
+.entity-field > label,
+.field_with_errors > label {
   display: inline-block;
   width: 150px;
   font-weight: bold;
 }
 
+.field_with_errors {
+  display: inline-block;
+}
+
+.field_with_errors > input,
+.field_with_errors > select, {
+  border: 1px solid #ff0000;
+}
