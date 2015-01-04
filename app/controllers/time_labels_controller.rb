@@ -3,7 +3,7 @@ class TimeLabelsController < ApplicationController
   before_action :set_time_label, only: [:show, :edit, :update, :destroy]
 
   def index
-    @time_labels = TimeLabel.all
+    @time_labels = TimeLabel.includes(:space_time).all
   end
 
   def show
@@ -42,7 +42,7 @@ class TimeLabelsController < ApplicationController
 
     # Use callbacks to share common setup or constraints between actions.
     def set_time_label
-      @time_label = TimeLabel.find(params[:id])
+      @time_label = TimeLabel.includes(:space_time).find(params[:id])
       head :not_found if @time_label.nil?
     end
 
