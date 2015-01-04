@@ -1,2 +1,6 @@
-<h1>Thing#edit</h1>
-<p>Find me in app/views/thing/edit.html.erb</p>
+<h1>Homestuck Maps > <%= link_to 'Things', things_path %></h1>
+<fieldset class="entity-form">
+  <legend>Edit Thing</legend>
+  <%= render partial: 'editor', locals: {thing: @thing, space_times: @space_times} %>
+</fieldset>
+

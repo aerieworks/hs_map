@@ -1,0 +1,23 @@
+<%= form_for thing do |f| %>
+  <div class="entity-field">
+    <%= f.label :name %><%= f.text_field :name %>
+  </div>
+  <div class="entity-field">
+    <%= f.label :category %>
+    <%= f.select :category, Hash[Thing.categories.keys.collect { |x| [x.capitalize, x] }] %>
+  </div>
+  <%= f.fields_for :instances do |i_f| %>
+    <div class="entity-field">
+      <%= i_f.label :space_time_id, 'SpaceTime' %>
+      <%= i_f.collection_select :space_time_id, space_times, :id, :name %>
+    </div>
+  <% end %>
+  <div class="entity-form-actions">
+    <%= f.submit %>
+    <% if thing.new_record? %>
+      <%= link_to 'Cancel', things_path %>
+    <% else %>
+      <%= link_to 'Cancel', thing_path %>
+    <% end %>
+  </div>
+<% end %>

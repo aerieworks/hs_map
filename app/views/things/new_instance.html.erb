@@ -1,0 +1,17 @@
+<h1>Homestuck Maps > <%= link_to 'Things', things_path %></h1>
+<h2>Add Instance of <%= @instance.thing.name %></h2>
+<%= render partial: 'viewer', locals: { thing: @instance.thing } %>
+<fieldset class="entity-form">
+  <legend>New Instance</legend>
+  <%= form_for @instance, url: {action: 'create_instance'} do |f| %>
+    <div class="entity-field">
+      <%= f.label :space_time_id, 'SpaceTime' %>
+      <%= f.collection_select :space_time_id, @space_times, :id, :name %>
+    </div>
+    <div class="entity-form-actions">
+      <%= f.submit %>
+      <%= link_to 'Cancel', thing_path(@instance.thing) %>
+    </div>
+  <% end %>
+</fieldset>
+

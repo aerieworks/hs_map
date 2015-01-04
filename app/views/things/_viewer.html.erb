@@ -1,0 +1,12 @@
+<div class="entity-field">
+  <label>Category</label>
+  <span class="entity-field-value"><%= thing.category.humanize %></span>
+</div>
+<div class="entity-field">
+  <label>Instances</label>
+  <span class="entity-field-value-list">
+    <% thing.instances.each do |x| %>
+      <span class="entity-field-value"><%= x.space_time.name %></span>
+    <% end %>
+  </span>
+</div>
