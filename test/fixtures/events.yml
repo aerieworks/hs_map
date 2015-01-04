@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  space_time_id: 
+  sequence_index: 1
+  is_index_known: false
+  when: MyString
+  summary: MyString
+
+two:
+  space_time_id: 
+  sequence_index: 1
+  is_index_known: false
+  when: MyString
+  summary: MyString
