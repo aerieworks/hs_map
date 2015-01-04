@@ -11,7 +11,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150104033127) do
+ActiveRecord::Schema.define(version: 20150104042906) do
+
+  create_table "event_participants", force: :cascade do |t|
+    t.integer  "event_id",          limit: 4, null: false
+    t.integer  "thing_instance_id", limit: 4, null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+  end
+
+  add_index "event_participants", ["event_id"], name: "index_event_participants_on_event_id", using: :btree
+  add_index "event_participants", ["thing_instance_id"], name: "index_event_participants_on_thing_instance_id", using: :btree
 
   create_table "events", force: :cascade do |t|
     t.integer  "space_time_id",  limit: 4,  null: false
@@ -51,16 +61,6 @@ ActiveRecord::Schema.define(version: 20150104033127) do
     t.datetime "updated_at",            null: false
   end
 
-  create_table "sub_event_participants", force: :cascade do |t|
-    t.integer  "event_id",          limit: 4, null: false
-    t.integer  "thing_instance_id", limit: 4, null: false
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
-  end
-
-  add_index "sub_event_participants", ["event_id"], name: "index_sub_event_participants_on_event_id", using: :btree
-  add_index "sub_event_participants", ["thing_instance_id"], name: "index_sub_event_participants_on_thing_instance_id", using: :btree
-
   create_table "sub_event_sources", force: :cascade do |t|
     t.integer  "event_id",     limit: 4, null: false
     t.string   "source_panel", limit: 6, null: false
@@ -98,13 +98,13 @@ ActiveRecord::Schema.define(version: 20150104033127) do
     t.datetime "updated_at",            null: false
   end
 
+  add_foreign_key "event_participants", "events"
+  add_foreign_key "event_participants", "thing_instances"
   add_foreign_key "events", "space_times"
   add_foreign_key "events", "thing_instances", column: "location_id"
   add_foreign_key "group_members", "events", column: "joined_at_id"
   add_foreign_key "group_members", "groups"
   add_foreign_key "group_members", "thing_instances"
-  add_foreign_key "sub_event_participants", "events"
-  add_foreign_key "sub_event_participants", "thing_instances"
   add_foreign_key "sub_event_sources", "events"
   add_foreign_key "sub_events", "events"
   add_foreign_key "thing_instances", "space_times"
