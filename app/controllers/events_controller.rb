@@ -40,33 +40,6 @@ class EventsController < ApplicationController
     end
   end
 
-  def new_instance
-    event = Event.find params[:id]
-    if event.nil?
-      head :not_found
-    end
-    init_instance_form_view_model(EventInstance.new event: event)
-  end
-
-  def create_instance
-    event = Event.find params[:id]
-    if event.nil?
-      head :not_found
-    else
-      instance = EventInstance.new instance_params
-      instance.event = event
-      if instance.valid?
-        instance.save
-        redirect_to event
-      else
-        logger.info 'Validation failed'
-        logger.info instance.errors.to_json
-        init_instance_form_view_model(instance)
-        render 'new_instance'
-      end
-    end
-  end
-
   private
   def set_breadcrumbs
     @breadcrumbs = [ { text: 'Events', path: events_path } ]

@@ -3,15 +3,9 @@ Rails.application.routes.draw do
   get 'edit' => 'map#edit', as: :edit_map
 
   resources :events
-  get 'events/:id/new_participant' => 'events#new_participant', as: :new_event_participant
-  post 'events/:id/new_participant' => 'events#create_participant'
-
   resources :space_times
-  resources :time_labels
-
   resources :things
-  get 'things/:id/new_instance' => 'things#new_instance', as: :new_thing_instance
-  post 'things/:id/new_instance' => 'things#create_instance'
+  resources :time_labels
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

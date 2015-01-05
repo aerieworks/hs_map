@@ -1,75 +1,39 @@
 class ThingsController < ApplicationController
   before_action :set_breadcrumbs
+  before_action :set_thing, only: [:show, :edit, :update]
 
   def index
     @things = Thing.includes(instances: [ :space_time ]).all
   end
 
   def show
-    @thing = Thing.find params[:id]
-    if @thing.nil?
-      head :not_found
-    end
   end
 
   def new
-    init_form_view_model(Thing.new)
+    @thing = Thing.new
+    render_form :new
   end
 
   def create
-    thing = Thing.new thing_params
-    thing.instances.each { |x| x.thing = thing }
-    if thing.valid?
-      thing.save
-      redirect_to thing
+    @thing = Thing.new thing_params
+    @thing.instances.each { |x| x.thing = thing }
+    if @thing.valid?
+      @thing.save
+      redirect_to @thing
     else
-      logger.info 'Validation failed'
-      logger.info thing.errors.to_json
-      init_form_view_model(thing)
-      render 'new'
+      render_form :new
     end
   end
 
   def edit
-    init_form_view_model(Thing.find params[:id])
+    render_form :edit
   end
 
   def update
-    thing = Thing.find params[:id]
-    if thing.update_attributes thing_params
-      redirect_to thing
+    if @thing.update_attributes thing_params
+      redirect_to @thing
     else
-      logger.info 'Validation failed'
-      logger.info thing.errors.to_json
-      init_form_view_model(thing)
-      render 'edit'
-    end
-  end
-
-  def new_instance
-    thing = Thing.find params[:id]
-    if thing.nil?
-      head :not_found
-    end
-    init_instance_form_view_model(ThingInstance.new thing: thing)
-  end
-
-  def create_instance
-    thing = Thing.find params[:id]
-    if thing.nil?
-      head :not_found
-    else
-      instance = ThingInstance.new instance_params
-      instance.thing = thing
-      if instance.valid?
-        instance.save
-        redirect_to thing
-      else
-        logger.info 'Validation failed'
-        logger.info instance.errors.to_json
-        init_instance_form_view_model(instance)
-        render 'new_instance'
-      end
+      render_form :edit
     end
   end
 
@@ -78,24 +42,19 @@ class ThingsController < ApplicationController
     @breadcrumbs = [ { text: 'Things', path: things_path } ]
   end
 
-  def init_form_view_model(thing)
-    @space_times = SpaceTime.all
-    @thing = thing
-    if thing.instances.length == 0
-      thing.instances.build
-    end
+  def set_thing
+    @thing = Thing.joins(:instances).joins(instances: :space_time).order('space_times.name ASC').find(params[:id])
   end
 
-  def init_instance_form_view_model(instance)
-    @space_times = SpaceTime.all
-    @instance = instance
+  def render_form(view)
+    @space_times = SpaceTime.order(name: :asc).all
+    if @thing.instances.length == 0
+      @thing.instances.build
+    end
+    render view
   end
 
   def thing_params
     params.require(:thing).permit(:name, :category, instances_attributes: [ :id, :space_time_id ])
-  end
-
-  def instance_params
-    params.require(:thing_instance).permit(:space_time_id)
   end
 end

@@ -6,12 +6,7 @@
     <%= f.label :category %>
     <%= f.select :category, Hash[Thing.categories.keys.collect { |x| [x.capitalize, x] }] %>
   </div>
-  <%= f.fields_for :instances do |i_f| %>
-    <div class="entity-field">
-      <%= i_f.label :space_time_id, 'SpaceTime' %>
-      <%= i_f.collection_select :space_time_id, space_times, :id, :name %>
-    </div>
-  <% end %>
+  <%= editor_for_each 'Instances', f, :instances, { space_times: space_times } %>
   <div class="entity-form-actions">
     <%= f.submit %>
     <% if thing.new_record? %>

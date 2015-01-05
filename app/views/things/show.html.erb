@@ -1,4 +1,3 @@
 <h2><%= @thing.name %></h2>
 <%= link_to 'edit', [ :edit, @thing ] %>
-<%= link_to 'add instance', new_thing_instance_path(@thing) %>
 <%= render partial: 'viewer', locals: { thing: @thing } %>
