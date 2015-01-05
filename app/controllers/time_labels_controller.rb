@@ -1,6 +1,6 @@
 class TimeLabelsController < ApplicationController
   before_action :set_breadcrumbs
-  before_action :set_time_label, only: [:show, :edit, :update, :destroy]
+  before_action :set_time_label, only: [:show, :edit, :update]
 
   def index
     @time_labels = TimeLabel.includes(:space_time).all

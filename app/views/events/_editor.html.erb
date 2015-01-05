@@ -1,0 +1,33 @@
+<%= form_for @event do |f| %>
+  <% if @event.errors.any? %>
+    <div class="entity-error-explanation">
+      <h2><%= pluralize(@event.errors.count, "error") %> prohibited this Event from being saved:</h2>
+
+      <ul>
+      <% @event.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="entity-field">
+    <%= f.label :summary %>
+    <%= f.text_field :summary, size: 50 %>
+  </div>
+  <%= editor_for_each 'Event Items', f, :sub_events %>
+  <%
+    participants = thing_instances_for_selection(@participants)
+    locations = thing_instances_for_selection(@locations)
+  %>
+  <%= editor_for_each 'Participants', f, :event_participants,
+    { participants: participants, locations: locations } %>
+  <div class="entity-form-actions">
+    <%= f.submit %>
+    <% if @event.new_record? %>
+      <%= link_to 'Cancel', events_path %>
+    <% else %>
+      <%= link_to 'Cancel', event_path %>
+    <% end %>
+  </div>
+<% end %>

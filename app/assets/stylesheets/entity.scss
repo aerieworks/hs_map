@@ -1,3 +1,11 @@
+.entity-child-list > h3 {
+  margin: 10px 0 0;
+}
+
+.entity-child {
+  margin-bottom: 20px;
+}
+
 .entity-field {
   margin: 2px 0;
 }
@@ -7,6 +15,16 @@
   display: inline-block;
   width: 150px;
   font-weight: bold;
+}
+
+label.entity-checkbox-label {
+  display: inline;
+  font-weight: normal;
+}
+
+.entity-field > textarea,
+.field_with_errors > textarea {
+  vertical-align: top;
 }
 
 .field_with_errors {

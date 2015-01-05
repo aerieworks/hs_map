@@ -1,0 +1,20 @@
+<div class="entity-field">
+  <label>Details</label>
+  <ul>
+    <% @event.sub_events.each do |x| %>
+      <li><%= x.description %></li>
+    <% end %>
+  </ul>
+</div>
+<div class="entity-field">
+  <label>Participants</label>
+  <ul>
+    <% @event.event_participants.each do |x| %>
+      <li>
+        <%= instance_name(x.thing_instance) %>
+        on <%= instance_name(x.location) %>
+        on <%= display_time(x, :local_time) %>
+      </li>
+    <% end %>
+  </ul>
+</div>

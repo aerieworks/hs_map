@@ -2,6 +2,10 @@ Rails.application.routes.draw do
 
   get 'edit' => 'map#edit', as: :edit_map
 
+  resources :events
+  get 'events/:id/new_participant' => 'events#new_participant', as: :new_event_participant
+  post 'events/:id/new_participant' => 'events#create_participant'
+
   resources :space_times
   resources :time_labels
 

@@ -17,7 +17,7 @@
   </div>
   <div class="entity-field">
     <%= f.label :sequence_index %>
-    <%= f.number_field :sequence_index, minimum: 0, step: 1 %>
+    <%= time_editor f, :sequence_index, skip_certainty: true %>
   </div>
   <div class="entity-field">
     <%= f.label :description %>

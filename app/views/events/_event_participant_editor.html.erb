@@ -1,0 +1,16 @@
+<div class="entity-child">
+  <div class="entity-field">
+    <%= f.label :thing_instance_id, 'Who' %>
+    <%= f.select :thing_instance_id, participants  %>
+    <%= time_editor f, :sequence_index %>
+  </div>
+  <div class="entity-field">
+    <%= f.label :location_id, 'Where' %>
+    <%= f.select :location_id, locations  %>
+  </div>
+  <div class="entity-field">
+    <%= f.label :local_time, 'When' %>
+    <%= time_editor f, :local_time %>
+  </div>
+</div>
+

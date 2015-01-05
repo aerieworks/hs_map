@@ -1,6 +1,10 @@
 class Event < ActiveRecord::Base
-  belongs_to :space_time
-  belongs_to :location, class_name: 'ThingInstance'
-  has_and_belongs_to_many :participants, class_name: 'ThingInstance', join_table: 'event_participants'
   has_many :sub_events
+  has_many :event_participants
+  has_many :participants, class_name: 'ThingInstance', through: :event_participants, source: :thing_instance
+
+  validates :summary, presence: true, length: { maximum: 50 }
+  validates_associated :sub_events, :event_participants
+
+  accepts_nested_attributes_for :sub_events, :event_participants
 end
