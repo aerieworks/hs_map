@@ -7,4 +7,8 @@ class Event < ActiveRecord::Base
   validates_associated :sub_events, :event_participants
 
   accepts_nested_attributes_for :sub_events, :event_participants
+
+  def descriptions
+    sub_events.map { |x| x.description }
+  end
 end

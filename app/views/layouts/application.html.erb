@@ -9,7 +9,7 @@
 <body>
 
   <h1>
-    Homestuck Maps > <%= link_to 'Editor', edit_map_path %>
+    <%= link_to 'Homestuck Maps', '/' %> &gt; <%= link_to 'Editor', edit_map_path %>
     <% if not @breadcrumbs.nil? %>
       <% @breadcrumbs.each do |crumb| %>
         &gt; <%= link_to crumb[:text], crumb[:path] %>

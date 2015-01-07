@@ -23,22 +23,27 @@ module ApplicationHelper
     return content
   end
 
-  def thing_instances_for_selection(things)
+  def thing_instances_for_selection(things, options={})
     if things.length == 0
-      return []
+      instances = []
     elsif things.first.respond_to? :instances
       instances = things.map do |thing|
         thing.instances.map do |instance|
           [ instance_name(instance, thing), instance.id ]
         end
       end
-      return instances.flatten!(1)
+      instances.flatten!(1)
     elsif things.first.respond_to? :thing
-      return things.map { |x| [ instance_name(x), x.id ] }
+      instances = things.map { |x| [ instance_name(x), x.id ] }
     else
-      logger.info 'No instances'
-      return []
+      instances []
     end
+
+    if options.fetch(:allow_nil, false)
+      instances.insert(0, [ '<none>', '' ])
+    end
+
+    return instances
   end
 
   def select_thing_instance(form, field, things)

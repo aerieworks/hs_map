@@ -16,7 +16,7 @@ class ThingsController < ApplicationController
 
   def create
     @thing = Thing.new thing_params
-    @thing.instances.each { |x| x.thing = thing }
+    @thing.instances.each { |x| x.thing = @thing }
     if @thing.valid?
       @thing.save
       redirect_to @thing
@@ -48,6 +48,8 @@ class ThingsController < ApplicationController
 
   def render_form(view)
     @space_times = SpaceTime.order(name: :asc).all
+    @locations = Thing.includes(instances: [ :space_time ])
+      .where(category: Thing.categories[:location])
     if @thing.instances.length == 0
       @thing.instances.build
     end
@@ -55,6 +57,8 @@ class ThingsController < ApplicationController
   end
 
   def thing_params
-    params.require(:thing).permit(:name, :category, instances_attributes: [ :id, :space_time_id ])
+    params.require(:thing)
+      .permit(:name, :category,
+              instances_attributes: [ :id, :space_time_id, :initial_location_id ])
   end
 end
