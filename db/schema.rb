@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150105021729) do
+ActiveRecord::Schema.define(version: 20150107040054) do
 
   create_table "event_participants", force: :cascade do |t|
     t.integer  "event_id",                limit: 4, null: false
@@ -96,13 +96,16 @@ ActiveRecord::Schema.define(version: 20150105021729) do
     t.datetime "updated_at",            null: false
   end
 
-  create_table "time_labels", force: :cascade do |t|
-    t.integer "space_time_id",  limit: 4,  null: false
-    t.integer "sequence_index", limit: 4,  null: false
-    t.string  "description",    limit: 50, null: false
+  create_table "time_points", force: :cascade do |t|
+    t.integer "space_time_id", limit: 4,  null: false
+    t.string  "description",   limit: 50
+    t.integer "previous_id",   limit: 4
+    t.integer "next_id",       limit: 4
   end
 
-  add_index "time_labels", ["space_time_id", "sequence_index"], name: "index_time_labels_on_space_time_id_and_sequence_index", unique: true, using: :btree
+  add_index "time_points", ["next_id"], name: "index_time_points_on_next_id", using: :btree
+  add_index "time_points", ["previous_id"], name: "index_time_points_on_previous_id", using: :btree
+  add_index "time_points", ["space_time_id"], name: "index_time_points_on_space_time_id", using: :btree
 
   add_foreign_key "event_participants", "events"
   add_foreign_key "event_participants", "thing_instances"
@@ -115,5 +118,7 @@ ActiveRecord::Schema.define(version: 20150105021729) do
   add_foreign_key "thing_instances", "space_times"
   add_foreign_key "thing_instances", "thing_instances", column: "initial_location_id"
   add_foreign_key "thing_instances", "things"
-  add_foreign_key "time_labels", "space_times"
+  add_foreign_key "time_points", "space_times"
+  add_foreign_key "time_points", "time_points", column: "next_id"
+  add_foreign_key "time_points", "time_points", column: "previous_id"
 end

@@ -1,0 +1,9 @@
+<%= link_to 'Add New Time Point', new_time_point_path %>
+<ul>
+  <% @time_points.each do |time_point| %>
+    <li>
+      <%= time_point.space_time.name %> -
+      <%= link_to time_point.description, time_point %>
+    </li>
+  <% end %>
+</ul>

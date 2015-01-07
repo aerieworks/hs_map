@@ -50,6 +50,10 @@ module ApplicationHelper
     form.select(field, thing_instances_for_selection(things))
   end
 
+  def select_time_point(field, time_points)
+      select_tag(field, options_for_select(time_points.map { |x| [ x.description, x.id ] }))
+  end
+
   def editor_for(builder, association, locals={})
     builder.fields_for(association) { |f|
       locals[:f] = f

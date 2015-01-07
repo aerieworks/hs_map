@@ -1,0 +1,40 @@
+<%= form_for(@time_point) do |f| %>
+  <% if @time_point.errors.any? %>
+    <div class="entity-error-explanation">
+      <h2><%= pluralize(@time_point.errors.count, "error") %> prohibited this Time Point from being saved:</h2>
+
+      <ul>
+      <% @time_point.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="entity-field">
+    <%= f.label :space_time_id, 'SpaceTime' %>
+    <%= f.collection_select :space_time_id, @space_times, :id, :name %>
+  </div>
+  <div class="entity-field">
+    <%= f.label :description %>
+    <%= f.text_field :description, size: 50, maximum: 50 %>
+  </div>
+  <div class="entity-field">
+    <%= f.label :when_direction, 'When' %>
+    <% if @time_points.empty? %>
+      <span class="entity-field-value">First timeline entry</span>
+    <% else %>
+      <%= select_tag(:when_direction, options_for_select([['Before', :before], ['After', :after]])) %>
+      <%= select_time_point(:when, @time_points) %>
+    <% end %>
+  </div>
+
+  <div class="entity-form-actions">
+    <%= f.submit %>
+    <% if @time_point.new_record? %>
+      <%= link_to 'Cancel', time_points_path %>
+    <% else %>
+      <%= link_to 'Cancel', time_point_path %>
+    <% end %>
+  </div>
+<% end %>
