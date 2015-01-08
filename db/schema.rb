@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150107040054) do
+ActiveRecord::Schema.define(version: 20150108021612) do
 
   create_table "event_participants", force: :cascade do |t|
     t.integer  "event_id",                limit: 4, null: false
@@ -96,16 +96,18 @@ ActiveRecord::Schema.define(version: 20150107040054) do
     t.datetime "updated_at",            null: false
   end
 
-  create_table "time_points", force: :cascade do |t|
-    t.integer "space_time_id", limit: 4,  null: false
-    t.string  "description",   limit: 50
-    t.integer "previous_id",   limit: 4
-    t.integer "next_id",       limit: 4
+  create_table "timeline_points", force: :cascade do |t|
+    t.string  "description",       limit: 50
+    t.integer "previous_id",       limit: 4
+    t.integer "next_id",           limit: 4
+    t.integer "thing_instance_id", limit: 4
+    t.integer "when_and_where_id", limit: 4
   end
 
-  add_index "time_points", ["next_id"], name: "index_time_points_on_next_id", using: :btree
-  add_index "time_points", ["previous_id"], name: "index_time_points_on_previous_id", using: :btree
-  add_index "time_points", ["space_time_id"], name: "index_time_points_on_space_time_id", using: :btree
+  add_index "timeline_points", ["next_id"], name: "index_timeline_points_on_next_id", using: :btree
+  add_index "timeline_points", ["previous_id"], name: "index_timeline_points_on_previous_id", using: :btree
+  add_index "timeline_points", ["thing_instance_id"], name: "index_timeline_points_on_thing_instance_id", using: :btree
+  add_index "timeline_points", ["when_and_where_id"], name: "index_timeline_points_on_when_and_where_id", using: :btree
 
   add_foreign_key "event_participants", "events"
   add_foreign_key "event_participants", "thing_instances"
@@ -118,7 +120,8 @@ ActiveRecord::Schema.define(version: 20150107040054) do
   add_foreign_key "thing_instances", "space_times"
   add_foreign_key "thing_instances", "thing_instances", column: "initial_location_id"
   add_foreign_key "thing_instances", "things"
-  add_foreign_key "time_points", "space_times"
-  add_foreign_key "time_points", "time_points", column: "next_id"
-  add_foreign_key "time_points", "time_points", column: "previous_id"
+  add_foreign_key "timeline_points", "thing_instances"
+  add_foreign_key "timeline_points", "timeline_points", column: "next_id"
+  add_foreign_key "timeline_points", "timeline_points", column: "previous_id"
+  add_foreign_key "timeline_points", "timeline_points", column: "when_and_where_id"
 end

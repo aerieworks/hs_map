@@ -1,0 +1,57 @@
+<%= form_for(@timeline_point) do |f| %>
+  <% if @timeline_point.errors.any? %>
+    <div class="entity-error-explanation">
+      <h2><%= pluralize(@timeline_point.errors.count, "error") %> prohibited this Timeline Point from being saved:</h2>
+
+      <ul>
+      <% @timeline_point.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="entity-field">
+    <%= f.label :thing_instance_id, 'On Timeline For' %>
+    <%= select_thing_instance(f, :thing_instance_id, @things) %>
+  </div>
+  <div class="entity-field">
+    <%= f.label :description %>
+    <%= f.text_field :description, size: 50, maximum: 50 %>
+  </div>
+  <div class="entity-field">
+    <%= f.label :where_id, 'Where' %>
+    <%
+      where_options = options_for_select(thing_instances_for_selection(@things, allow_nil: true),
+                                         @where_id)
+      when_options = @initial_when_and_wheres.map { |x| [ x.description, x.id ] }
+    %>
+    <%= select_tag :where_id, where_options %>
+    when
+    <%= f.select('when_and_where_id', when_options) %>
+  </div>
+  <div class="entity-field">
+    <%= f.label :when_direction, 'When On Timeline' %>
+    <%= select_tag(:when_direction, options_for_select([['Before', :before], ['After', :after]], @when_direction)) %>
+    <%= select_timeline_point(:when_id, @timeline_points, value: @when_id) %>
+  </div>
+
+  <div class="entity-form-actions">
+    <%= f.submit %>
+    <% if @timeline_point.new_record? %>
+      <%= link_to 'Cancel', timeline_points_path %>
+    <% else %>
+      <%= link_to 'Cancel', timeline_point_path %>
+    <% end %>
+  </div>
+<% end %>
+<script>
+jQuery(function ($) {
+  window.Mapstuck.Timelines.ui.selector($('#timeline_point_when_and_where_id'), {
+    instanceSelector: $('#where_id')
+  });
+  window.Mapstuck.Timelines.ui.selector($('#when_id'), {
+    instanceSelector: $('#timeline_point_thing_instance_id')
+  });
+});
+</script>

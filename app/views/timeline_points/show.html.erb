@@ -1,0 +1,39 @@
+<h2>Timeline Point</h2>
+<%= link_to 'Edit', edit_timeline_point_path(@timeline_point) %>
+
+<div class="entity-field">
+  <label>On Timeline For</label>
+  <span class="entity-field-value"><%= instance_name(@timeline_point.thing_instance) %></span>
+</div>
+<div class="entity-field">
+  <label>Description</label>
+  <span class="entity-field-value"><%= @timeline_point.description %></span>
+</div>
+<div class="entity-field">
+  <label>Where and When</label>
+  <span class="entity-field-value">
+    <% if @timeline_point.when_and_where.nil? %>
+      nowhere, nowhen
+    <% else %>
+      <%= link_to timeline_point_name(@timeline_point.when_and_where), @timeline_point.when_and_where %>
+    <% end %>
+  </span>
+</div>
+<div class="entity-field">
+  <% if @timeline_point.previous.nil? %>
+    <label></label>
+    <span class="entity-field-value">Start of timeline</span>
+  <% else %>
+    <label>Previous</label>
+    <span class="entity-field-value"><%= link_to @timeline_point.previous.description, @timeline_point.previous %></span>
+  <% end %>
+</div>
+<div class="entity-field">
+  <% if @timeline_point.next.nil? %>
+    <label></label>
+    <span class="entity-field-value">End of timeline</span>
+  <% else %>
+    <label>Next</label>
+    <span class="entity-field-value"><%= link_to @timeline_point.next.description, @timeline_point.next %></span>
+  <% end %>
+</div>

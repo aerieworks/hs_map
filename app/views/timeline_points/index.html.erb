@@ -1,0 +1,13 @@
+<%= link_to 'Add New Time Point', new_timeline_point_path %>
+<ul>
+  <% @timelines.values.each do |timeline| %>
+    <li>
+      <%= instance_name(timeline.first.thing_instance) %>
+      <ul>
+        <% timeline.each do |point| %>
+          <li><%= link_to point.description, point %></li>
+        <% end %>
+      </ul>
+    </li>
+  <% end %>
+</ul>

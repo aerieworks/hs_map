@@ -1,4 +1,8 @@
 module ApplicationHelper
+  def timeline_point_name(timeline_point)
+    "#{instance_name(timeline_point.thing_instance)}: #{timeline_point.description}"
+  end
+
   def instance_name(thing_instance, thing=nil)
     if thing.nil?
       thing = thing_instance.thing
@@ -50,8 +54,8 @@ module ApplicationHelper
     form.select(field, thing_instances_for_selection(things))
   end
 
-  def select_time_point(field, time_points)
-      select_tag(field, options_for_select(time_points.map { |x| [ x.description, x.id ] }))
+  def select_timeline_point(field, points, value=nil)
+      select_tag(field, options_for_select(points.map { |x| [ x.description, x.id ] }, value))
   end
 
   def editor_for(builder, association, locals={})

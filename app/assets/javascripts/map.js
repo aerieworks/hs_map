@@ -230,31 +230,33 @@ jQuery(function ($) {
     }
   }
 
-  initializeData(window.hsMapData);
+  if (window.hsMapData) {
+    initializeData(window.hsMapData);
 
-  var rose = 'rgba(181, 54, 218, 0.8)';
-  var mapCanvas = document.getElementById('mapCanvas');
-  var ctx = mapCanvas.getContext('2d');
+    var rose = 'rgba(181, 54, 218, 0.8)';
+    var mapCanvas = document.getElementById('mapCanvas');
+    var ctx = mapCanvas.getContext('2d');
 
-  drawInsetBox(0, 0, 200, 400, 5, rose);
-  drawLabel('LOLAR', 100, 10);
+    drawInsetBox(0, 0, 200, 400, 5, rose);
+    drawLabel('LOLAR', 100, 10);
 
-  var colors = [ '#b536da', '#ff6ff2', 'purple' ];
-  var index = 0;
-  for (var id in hsMapData.thingInstances) {
-    if (!hsMapData.thingInstances.hasOwnProperty(id)) {
-      continue;
+    var colors = [ '#b536da', '#ff6ff2', 'purple' ];
+    var index = 0;
+    for (var id in hsMapData.thingInstances) {
+      if (!hsMapData.thingInstances.hasOwnProperty(id)) {
+        continue;
+      }
+
+      var inst = hsMapData.thingInstances[id];
+      if (inst.thing.category == 'character' && inst.experiences) {
+        console.log('Rendering events for ' + inst.spaceTime.name + '!' + inst.thing.name);
+        drawExperiences(50 + index * 100, colors[index], inst.experiences);
+        index += 1;
+      }
     }
 
-    var inst = hsMapData.thingInstances[id];
-    if (inst.thing.category == 'character' && inst.experiences) {
-      console.log('Rendering events for ' + inst.spaceTime.name + '!' + inst.thing.name);
-      drawExperiences(50 + index * 100, colors[index], inst.experiences);
-      index += 1;
-    }
+    $('#mapCanvas')
+      .bind('mousemove', map_mouseover)
+      .bind('click', map_click);
   }
-
-  $('#mapCanvas')
-    .bind('mousemove', map_mouseover)
-    .bind('click', map_click);
 });

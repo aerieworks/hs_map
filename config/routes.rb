@@ -5,7 +5,8 @@ Rails.application.routes.draw do
   resources :events
   resources :space_times
   resources :things
-  resources :time_points
+  resources :timeline_points
+  resources :timelines
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
