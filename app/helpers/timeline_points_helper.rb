@@ -1,9 +1,5 @@
 module TimelinePointsHelper
-  def timeline_point_name(timeline_point)
-    "#{instance_name(timeline_point.thing_instance)}: #{timeline_point.description}"
-  end
-
-  def describe_timeline_point(point, full=false)
+  def describe_timeline_point(point, full=true)
     text = "#{describe(point.thing_instance)}"
     unless point.description.nil?
       text += " @ #{point.description}"
@@ -13,5 +9,9 @@ module TimelinePointsHelper
     end
 
     return text
+  end
+
+  def select_timeline_point(field, points, value=nil)
+    select_tag(field, to_select_options(points, :id, { selected: value }))
   end
 end

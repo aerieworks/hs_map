@@ -3,10 +3,6 @@ module ApplicationHelper
     send("describe_#{model.class.name.tableize.singularize}", model, *args)
   end
 
-  def instance_name(thing_instance, thing=nil)
-    describe(thing_instance, thing)
-  end
-
   def display_time(o, time_symbol)
     time = o[time_symbol]
     is_known = o["is_#{time_symbol}_known".to_sym]
@@ -33,7 +29,7 @@ module ApplicationHelper
     end
   end
 
-  def to_select_options(enumerable, value_source, selected=nil)
+  def to_select_options(enumerable, value_source, options={})
     is_value_source_lambda = value_source.respond_to? :call
     tuples = enumerable.collect do |x|
       [
@@ -41,38 +37,7 @@ module ApplicationHelper
         is_value_source_lambda ? value_source.call(x) : x[value_source]
       ]
     end
-    options_for_select(tuples, selected)
-  end
-
-  def thing_instances_for_selection(things, options={})
-    if things.length == 0
-      instances = []
-    elsif things.first.respond_to? :instances
-      instances = things.map do |thing|
-        thing.instances.map do |instance|
-          [ instance_name(instance, thing), instance.id ]
-        end
-      end
-      instances.flatten!(1)
-    elsif things.first.respond_to? :thing
-      instances = things.map { |x| [ instance_name(x), x.id ] }
-    else
-      instances []
-    end
-
-    if options.fetch(:allow_nil, false)
-      instances.insert(0, [ '<none>', '' ])
-    end
-
-    return instances
-  end
-
-  def select_thing_instance(form, field, things)
-    form.select(field, thing_instances_for_selection(things))
-  end
-
-  def select_timeline_point(field, points, value=nil)
-      select_tag(field, options_for_select(points.map { |x| [ x.description, x.id ] }, value))
+    options_for_select(tuples, options[:selected])
   end
 
   def editor_for(builder, association, locals={})

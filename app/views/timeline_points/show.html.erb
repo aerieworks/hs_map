@@ -3,7 +3,7 @@
 
 <div class="entity-field">
   <label>On Timeline For</label>
-  <span class="entity-field-value"><%= instance_name(@timeline_point.thing_instance) %></span>
+  <span class="entity-field-value"><%= describe(@timeline_point.thing_instance) %></span>
 </div>
 <div class="entity-field">
   <label>Description</label>
@@ -15,7 +15,7 @@
     <% if @timeline_point.when_and_where.nil? %>
       nowhere, nowhen
     <% else %>
-      <%= link_to timeline_point_name(@timeline_point.when_and_where), @timeline_point.when_and_where %>
+      <%= link_to describe(@timeline_point.when_and_where), @timeline_point.when_and_where %>
     <% end %>
   </span>
 </div>
@@ -25,7 +25,7 @@
     <span class="entity-field-value">Start of timeline</span>
   <% else %>
     <label>Previous</label>
-    <span class="entity-field-value"><%= link_to @timeline_point.previous.description, @timeline_point.previous %></span>
+    <span class="entity-field-value"><%= link_to describe(@timeline_point.previous), @timeline_point.previous %></span>
   <% end %>
 </div>
 <div class="entity-field">
@@ -34,6 +34,6 @@
     <span class="entity-field-value">End of timeline</span>
   <% else %>
     <label>Next</label>
-    <span class="entity-field-value"><%= link_to @timeline_point.next.description, @timeline_point.next %></span>
+    <span class="entity-field-value"><%= link_to describe(@timeline_point.next), @timeline_point.next %></span>
   <% end %>
 </div>

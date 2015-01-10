@@ -4,7 +4,7 @@ class TimelinePoint < ActiveRecord::Base
   belongs_to :previous, class_name: 'TimelinePoint'
   belongs_to :next, class_name: 'TimelinePoint'
 
-  validates :description, :thing_instance, presence: true
+  validates :thing_instance, presence: true
   validates :description, length: { maximum: 50 }
 
   def self.to_ordered_timeline(points)
