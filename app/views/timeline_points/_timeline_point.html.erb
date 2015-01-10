@@ -1,0 +1,7 @@
+<ul class="timeline-point">
+  <% p = timeline_point %>
+  <% until p.nil? %>
+    <li><%= describe_timeline_point(p) %></li>
+    <% p = p.when_and_where %>
+  <% end %>
+</ul>

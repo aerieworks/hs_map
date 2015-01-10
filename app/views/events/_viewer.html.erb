@@ -7,13 +7,11 @@
   </ul>
 </div>
 <div class="entity-field">
-  <label>Participants</label>
-  <ul>
-    <% @event.event_participants.each do |x| %>
+  <label>Experienced By</label>
+  <ul class="event-experiences">
+    <% @event.experiences.each do |x| %>
       <li>
-        <%= instance_name(x.thing_instance) %>
-        on <%= instance_name(x.location) %>
-        on <%= display_time(x, :local_time) %>
+        <%= render x %>
       </li>
     <% end %>
   </ul>

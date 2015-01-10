@@ -11,23 +11,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150108021612) do
+ActiveRecord::Schema.define(version: 20150108070039) do
 
-  create_table "event_participants", force: :cascade do |t|
-    t.integer  "event_id",                limit: 4, null: false
-    t.integer  "thing_instance_id",       limit: 4, null: false
-    t.datetime "created_at",                        null: false
-    t.datetime "updated_at",                        null: false
-    t.integer  "sequence_index",          limit: 4, null: false
-    t.boolean  "is_sequence_index_known", limit: 1, null: false
-    t.integer  "location_id",             limit: 4
-    t.integer  "local_time",              limit: 4, null: false
-    t.boolean  "is_local_time_known",     limit: 1, null: false
+  create_table "event_experiences", force: :cascade do |t|
+    t.integer  "event_id",          limit: 4, null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.integer  "timeline_point_id", limit: 4
   end
 
-  add_index "event_participants", ["event_id"], name: "index_event_participants_on_event_id", using: :btree
-  add_index "event_participants", ["location_id"], name: "index_event_participants_on_location_id", using: :btree
-  add_index "event_participants", ["thing_instance_id"], name: "index_event_participants_on_thing_instance_id", using: :btree
+  add_index "event_experiences", ["event_id"], name: "index_event_experiences_on_event_id", using: :btree
+  add_index "event_experiences", ["timeline_point_id"], name: "index_event_experiences_on_timeline_point_id", using: :btree
 
   create_table "events", force: :cascade do |t|
     t.string   "summary",    limit: 50, null: false
@@ -109,9 +103,8 @@ ActiveRecord::Schema.define(version: 20150108021612) do
   add_index "timeline_points", ["thing_instance_id"], name: "index_timeline_points_on_thing_instance_id", using: :btree
   add_index "timeline_points", ["when_and_where_id"], name: "index_timeline_points_on_when_and_where_id", using: :btree
 
-  add_foreign_key "event_participants", "events"
-  add_foreign_key "event_participants", "thing_instances"
-  add_foreign_key "event_participants", "thing_instances", column: "location_id"
+  add_foreign_key "event_experiences", "events"
+  add_foreign_key "event_experiences", "timeline_points"
   add_foreign_key "group_members", "events", column: "joined_at_id"
   add_foreign_key "group_members", "groups"
   add_foreign_key "group_members", "thing_instances"

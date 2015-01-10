@@ -35,3 +35,7 @@ label.entity-checkbox-label {
 .field_with_errors > select, {
   border: 1px solid #ff0000;
 }
+
+.entity-field > ul {
+  margin-top: 0;
+}

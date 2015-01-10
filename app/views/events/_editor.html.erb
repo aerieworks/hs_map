@@ -15,13 +15,8 @@
     <%= f.label :summary %>
     <%= f.text_field :summary, size: 50 %>
   </div>
-  <%= editor_for_each 'Event Items', f, :sub_events %>
-  <%
-    participants = thing_instances_for_selection(@participants)
-    locations = thing_instances_for_selection(@locations)
-  %>
-  <%= editor_for_each 'Participants', f, :event_participants,
-    { participants: participants, locations: locations } %>
+  <%= editor_for_each 'Details', f, :sub_events %>
+  <%= editor_for_each 'Experienced By', f, :event_experiences, { points: @timeline_points } %>
   <div class="entity-form-actions">
     <%= f.submit %>
     <% if @event.new_record? %>

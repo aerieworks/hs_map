@@ -1,13 +1,10 @@
 module ApplicationHelper
-  def timeline_point_name(timeline_point)
-    "#{instance_name(timeline_point.thing_instance)}: #{timeline_point.description}"
+  def describe(model, *args)
+    send("describe_#{model.class.name.tableize.singularize}", model, *args)
   end
 
   def instance_name(thing_instance, thing=nil)
-    if thing.nil?
-      thing = thing_instance.thing
-    end
-    "#{thing_instance.space_time.name}!#{thing.name}"
+    describe(thing_instance, thing)
   end
 
   def display_time(o, time_symbol)
@@ -25,6 +22,26 @@ module ApplicationHelper
     end
 
     return content
+  end
+
+  def group_by(enumerable, grouper)
+    is_grouper_lambda = grouper.respond_to? :call
+    enumerable.each_with_object({}) do |x, m|
+      id = (is_grouper_lambda ? grouper.call(x) : x[grouper])
+      m[id] = [] unless m.key? id
+      m[id].push(block_given? ? yield(x) : x)
+    end
+  end
+
+  def to_select_options(enumerable, value_source, selected=nil)
+    is_value_source_lambda = value_source.respond_to? :call
+    tuples = enumerable.collect do |x|
+      [
+        block_given? ? yield(x) : describe(x),
+        is_value_source_lambda ? value_source.call(x) : x[value_source]
+      ]
+    end
+    options_for_select(tuples, selected)
   end
 
   def thing_instances_for_selection(things, options={})

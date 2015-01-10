@@ -11,9 +11,9 @@ jQuery(function ($) {
     var id = Date.now();
     console.log('New ID: ' + id);
     addEditorButton.before(editorMarkup.replace(new RegExp(mockId, 'g'), id));
+    window.Mapstuck.ui.initialize(addEditorButton.parent());
   }
 
   var editorAdders = $('.add-editor');
   editorAdders.bind('click', addEditor);
-  console.log('loaded: ' + editorAdders.length);
 });

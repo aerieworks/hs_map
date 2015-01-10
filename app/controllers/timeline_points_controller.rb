@@ -80,7 +80,7 @@ class TimelinePointsController < ApplicationController
           new_next = when_point.next
         end
 
-        if not new_prev.eql? tp.previous or not new_next.eql? tp.next
+        if not new_prev.eql? tp.previous and not new_next.eql? tp.next
           # Connect current location around time point.
           (to_save.push tp.previous and tp.previous.next = tp.next) unless tp.previous.nil?
           (to_save.push tp.next and tp.next.previous = tp.previous) unless tp.next.nil?
@@ -97,7 +97,7 @@ class TimelinePointsController < ApplicationController
     end
 
     def timeline_point_params
-      params.require(:timeline_point).permit(:thing_instance_id, :where_and_when_id, :description)
+      params.require(:timeline_point).permit(:thing_instance_id, :when_and_where_id, :description)
     end
 
     def render_form(form)
@@ -110,7 +110,17 @@ class TimelinePointsController < ApplicationController
 
       @initial_when_and_wheres = TimelinePoint.includes(thing_instance: [ :thing, :space_time ]).where(thing_instance_id: @where_id)
 
-      @when_direction = params[:when_direction]
+      if params[:when_direction].nil?
+        if @timeline_point.previous_id.nil?
+          @when_direction = :before
+          @when_id = @timeline_point.next_id
+        else
+          @when_direction = :after
+          @when_id = @timeline_point.previous_id
+        end
+      else
+        @when_direction = params[:when_direction]
+      end
       @when_id = params[:when_id]
       if @timeline_point.new_record?
         @timeline_points = []

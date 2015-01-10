@@ -45,6 +45,14 @@
     instanceSelector.on('change', { pointSelector: pointSelector }, updatePointSelector);
   }
 
+  function initializeTimelinePointSelector(controlContainer) {
+    bindTimelinePointSelector(
+      $('.timeline-point-selector-point', controlContainer),
+      { instanceSelector: $('.timeline-point-selector-instance', controlContainer) }
+    );
+  }
+
+  M.ui.registerControl('timeline-point-selector', initializeTimelinePointSelector);
   M.Timelines = {
     get: getTimeline
   };

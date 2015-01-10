@@ -4,8 +4,7 @@ class EventsController < ApplicationController
 
 
   def index
-    @events = Event.includes(event_participants: [ :location ],
-                             participants: [ :thing, :space_time ]).all
+    @events = Event.all
   end
 
   def show
@@ -46,21 +45,24 @@ class EventsController < ApplicationController
   end
 
   def set_event
-    @event = Event.find(params[:id])
-    head :not_found if @event.nil?
+    @event = Event.includes(experiences: [ thing_instance: [ :thing, :space_time ],
+                            when_and_where: [] ])
+      .find(params[:id])
   end
 
   def render_form(view)
     things = Thing.includes(instances: [ :space_time ]).all
     @locations = things.select { |x| x.location? }
-    @participants = things.select { |x| not x.location? }
+    @timeline_points = TimelinePoint
+      .includes(thing_instance: [ :thing, :space_time ])
+      .all
 
     if @event.sub_events.length == 0
       @event.sub_events.build
     end
 
-    if @event.event_participants.length == 0
-      @event.event_participants.build
+    if @event.event_experiences.length == 0
+      @event.event_experiences.build
     end
 
     render view
@@ -70,8 +72,7 @@ class EventsController < ApplicationController
     params.require(:event)
       .permit(
         :summary,
-        event_participants_attributes: [ :id, :location_id, :thing_instance_id, :local_time,
-          :is_local_time_known, :sequence_index, :is_sequence_index_known ],
+        event_experiences_attributes: [ :id, :timeline_point_id ],
         sub_events_attributes: [ :id, :description ]
       )
   end

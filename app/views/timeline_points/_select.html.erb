@@ -1,0 +1,20 @@
+<%
+  points_map = group_by(points, :thing_instance_id)
+
+  selected_point_index = points.find_index { |x| x.id == f.object[field] }
+  selected_instance_id = selected_point_index.nil? ? points_map.keys.first : points[selected_point_index].thing_instance_id
+
+  instance_options = to_select_options(points_map.values, ->(x) { x.first.thing_instance.id },
+                                       selected: selected_instance_id) do |x|
+    describe(x.first.thing_instance)
+  end
+
+  point_options = to_select_options(points_map[selected_instance_id], :id, f.object[field]) do |x|
+    describe(x, full: true)
+  end
+%>
+<%= content_tag 'span', class: 'timeline-point-selector dynamic-control',
+  data: { 'control-type' => 'timeline-point-selector' } do %>
+  <%= select_tag :instance, instance_options, class: 'timeline-point-selector-instance' %>:
+  <%= f.select field, point_options, {}, { class: 'timeline-point-selector-point' } %>
+<% end %>
