@@ -59,6 +59,6 @@ class ThingsController < ApplicationController
   def thing_params
     params.require(:thing)
       .permit(:name, :category,
-              instances_attributes: [ :id, :space_time_id, :initial_location_id ])
+              instances_attributes: [ :id, :space_time_id ])
   end
 end

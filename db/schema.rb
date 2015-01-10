@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150108070039) do
+ActiveRecord::Schema.define(version: 20150110085748) do
 
   create_table "event_experiences", force: :cascade do |t|
     t.integer  "event_id",          limit: 4, null: false
@@ -72,14 +72,12 @@ ActiveRecord::Schema.define(version: 20150108070039) do
   add_index "sub_events", ["event_id"], name: "index_sub_events_on_event_id", using: :btree
 
   create_table "thing_instances", force: :cascade do |t|
-    t.integer  "thing_id",            limit: 4, null: false
-    t.integer  "space_time_id",       limit: 4, null: false
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
-    t.integer  "initial_location_id", limit: 4
+    t.integer  "thing_id",      limit: 4, null: false
+    t.integer  "space_time_id", limit: 4, null: false
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
   end
 
-  add_index "thing_instances", ["initial_location_id"], name: "index_thing_instances_on_initial_location_id", using: :btree
   add_index "thing_instances", ["space_time_id"], name: "index_thing_instances_on_space_time_id", using: :btree
   add_index "thing_instances", ["thing_id"], name: "index_thing_instances_on_thing_id", using: :btree
 
@@ -111,7 +109,6 @@ ActiveRecord::Schema.define(version: 20150108070039) do
   add_foreign_key "sub_event_sources", "events"
   add_foreign_key "sub_events", "events"
   add_foreign_key "thing_instances", "space_times"
-  add_foreign_key "thing_instances", "thing_instances", column: "initial_location_id"
   add_foreign_key "thing_instances", "things"
   add_foreign_key "timeline_points", "thing_instances"
   add_foreign_key "timeline_points", "timeline_points", column: "next_id"
