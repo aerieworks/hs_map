@@ -25,6 +25,25 @@
       }
     }
 
+    function each(callback) {
+      var isMethodName = (typeof callback == 'string');
+      for (var i = 0; i < this.list.length; i++) {
+        if (isMethodName) {
+          this.list[i][callback].call(this.list[i]);
+        } else {
+          callback(i, this.list[i]);
+        }
+      }
+    }
+
+    function get(index) {
+      return this.list[index];
+    }
+
+    function getLength() {
+      return this.list.length;
+    }
+
     function isEmpty() {
       return this.list.length == 0;
     }
@@ -41,6 +60,9 @@
     Set.prototype = {
       add: add,
       addAll: addAll,
+      each: each,
+      get: get,
+      getLength: getLength,
       isEmpty: isEmpty,
       remove: remove
     };
@@ -75,6 +97,7 @@
   window.Mapstuck = {
     Set: Set,
     data: {},
+    models: {},
     ui: {
       registerControl: registerDynamicControl,
       initialize: initializeUi

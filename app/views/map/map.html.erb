@@ -5,6 +5,7 @@
     events: <%= raw @events.active_model_serializer.new(@events).to_json %>,
     spaceTimes: <%= raw @space_times.active_model_serializer.new(@space_times).to_json %>,
     things: <%= raw @things.active_model_serializer.new(@things).to_json %>,
+    timelines: <%= raw @timelines.active_model_serializer.new(@timelines).to_json %>,
     timelinePoints: <%= raw @timeline_points.active_model_serializer.new(@timeline_points).to_json %>
   };
 </script>

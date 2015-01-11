@@ -1,78 +1,61 @@
 (function (M, $) {
-  function toMap(objects, key) {
-    if (!key) {
-      key = 'id';
-    }
+  var GRID_CELL_WIDTH = 50;
+  var GRID_CELL_HEIGHT = 50;
 
-    var map = {};
+  function toModels(objects, constructor) {
+    var models = new M.Set();
     for (var i = 0; i < objects.length; i++) {
-      map[objects[i][key]] = objects[i];
+      models.add(new constructor(objects[i]));
     }
-
-    return map;
+    return models;
   }
 
-  function collectAssociations(objects, name) {
-    var result = [];
-    for (var objectId in objects) {
-      if (!objects.hasOwnProperty(objectId)) {
-        continue;
-      }
-
-      var association = objects[objectId][name];
-      if ($.isArray(association)) {
-        for (var i = 0; i < association.length; i++) {
-          result.push(association[i]);
-        }
-      } else {
-        result.push(association);
-      }
-    }
-
-    return result;
+  function computeCellCorner(cellCoords) {
+    return { x: cellCoords.x * GRID_CELL_WIDTH, y: cellCoords.y * GRID_CELL_HEIGHT };
   }
 
-  function mapRelations(objects, relationList) {
-    for (var objectId in objects) {
-      if (!objects.hasOwnProperty(objectId)) {
-        continue;
-      }
-
-      var o = objects[objectId];
-      for (var i = 0; i < relationList.length; i++) {
-        var relation = relationList[i];
-        o[relation.name] = relation.objects[o[relation.id]] || null;
-      }
-    }
+  function computeCellCenter(cellCoords) {
+    var cellCorner = computeCellCorner(cellCoords);
+    return { x: cellCorner.x + GRID_CELL_WIDTH / 2, y: cellCorner.y + GRID_CELL_HEIGHT / 2 };
   }
 
   function TimelineMapView(canvas) {
     this.canvas = canvas;
     this.ctx = canvas[0].getContext('2d');
 
-    this.nowhere = { id: null, contents: new M.Set(), thing: { name: 'Nowhere' } };
-    this.events = canvas.data('events');
-    this.spaceTimes = canvas.data('spaceTimes');
-    this.spaceTimesMap = toMap(this.spaceTimes);
-    this.things = canvas.data('things');
-    this.thingsMap = toMap(this.things);
-    this.timelines = collectAssociations(this.things, 'instances');
-    this.timelinesMap = toMap(this.timelines);
-    for (var i = 0; i < this.timelines.length; i++) {
-      var t = this.timelines[i];
-      t.spaceTime = this.spaceTimesMap[t.space_time_id];
-      t.temp_subLocations = new M.Set();
-      t.contents = new M.Set();
-      t.thing = this.thingsMap[t.thing_id];
+    this.events = toModels(canvas.data('events'), M.models.Event);
+    this.spaceTimes = toModels(canvas.data('spaceTimes'), M.models.SpaceTime);
+    this.things = toModels(canvas.data('things'), M.models.Thing);
+    this.timelines = toModels(canvas.data('timelines'), M.models.Timeline);
+    this.timelinePoints = toModels(canvas.data('timelinePoints'), M.models.TimelinePoint);
+    this.nowhere = new M.models.Thing({ id: -1, name: 'Nowhere', category: 'location' });
+    this.never = new M.models.SpaceTime({ id: -1, name: 'Never' });
+    this.void = new M.models.Timeline({ id: null, thing_id: -1, space_time_id: -1 });
+
+    for (var i = 0; i < this.timelinePoints.getLength(); i++) {
+      var p = this.timelinePoints.get(i);
+      if (p.whenAndWhere == null) {
+        this.void.contents.add(p.timeline);
+      }
     }
 
-    this.timelinePoints = canvas.data('timelinePoints');
-    this.timelinePointsMap = toMap(this.timelinePoints);
-    this.buildTimelines();
-    this.calculateTimes();
-    this.calculateWidths();
-    this.alignPoints();
-    this.drawLocations(this.nowhere.contents.list, 0);
+    // Force width calculation.
+    M.models.Timeline.cache.each(function (i, l) { l.getWidth(); });
+    var me = this;
+    this.timelines.each(function (index, line) {
+      console.log(line.getName() + ': ' + line.getWidth());
+      var p = line.start;
+      while (p) {
+        var container = p.whenAndWhere ? p.whenAndWhere.timeline.getName() : '<>';
+        console.log('\t' + p.id + ' -> ' + container + ' (' + p.getRow() + ', ' + p.getColumn() + ')');
+        p = p.next;
+      }
+    });
+
+
+    this.drawGridPoints();
+    this.drawTimelines(this.void, 0);
+    this.drawEvents();
 
     this.canvas
       .bind('mousemove', { me: this }, map_mouseover)
@@ -103,102 +86,6 @@
       };
     },
 
-    buildTimelines: function buildTimelines() {
-      for (var i = 0; i < this.timelinePoints.length; i++) {
-        var p = this.timelinePoints[i];
-        p.coords = {x : null, y: null };
-        p.timeline = this.timelinesMap[p.thing_instance_id];
-        if (p.previous_id == null) {
-          p.timeline.start = p;
-        }
-
-        p.characterCount = 0;
-        p.whenAndWhere = this.timelinePointsMap[p.when_and_where_id];
-        p.previous = this.timelinePointsMap[p.previous_id];
-        p.next = this.timelinePointsMap[p.next_id];
-      }
-
-      for (var i = 0; i < this.timelinePoints.length; i++) {
-        var p = this.timelinePoints[i];
-        if (p.whenAndWhere) {
-          if (p.timeline.thing.category == 'location') {
-            p.whenAndWhere.timeline.temp_subLocations.add(p.timeline);
-            p.whenAndWhere.timeline.contents.add(p.timeline);
-          } else {
-            p.whenAndWhere.characterCount += 1;
-          }
-        } else {
-          this.nowhere.contents.add(p.timeline);
-        }
-      }
-    },
-
-    calculateTimes: function calcuateTimes() {
-      for (var i = 0; i < this.nowhere.contents.list.length; i++) {
-        var line = this.nowhere.contents.list[i];
-        var p = line.start;
-        var y = 0;
-        while (p) {
-          if (p.whenAndWhere == null) {
-            p.coords.y = y;
-            y += 1;
-          } else {
-            y = 0;
-          }
-          p = p.next;
-        }
-      }
-
-      for (var i = 0; i < this.timelinePoints.length; i++) {
-        var p = this.timelinePoints[i];
-        var q = p;
-        while (q.coords.y == null) {
-          q = q.whenAndWhere;
-        }
-        while (p.coords.y == null) {
-          p.coords.y = q.coords.y;
-          p = p.whenAndWhere;
-        }
-      }
-    },
-
-    calculateWidths: function calculateWidths() {
-      // Calculate max direct character counts and find parent locations.
-      var locations = [];
-      for (var i = 0; i < this.timelines.length; i++) {
-        var line = this.timelines[i];
-        if (!line.temp_subLocations.isEmpty()) {
-          locations.push(line);
-        }
-        line.maxCharacterCount = 0;
-        var p = line.start;
-        while (p) {
-          if (p.characterCount > line.maxCharacterCount) {
-            line.maxCharacterCount = p.characterCount;
-          }
-          p = p.next;
-        }
-      }
-
-      while (locations.length > 0) {
-        for (var i = 0; i < locations.length; i++) {
-          var l = locations[i];
-          for (var j = 0; j < l.temp_subLocations.list.length; j++) {
-            var sub = l.temp_subLocations.list[j];
-            if (sub.temp_subLocations.isEmpty()) {
-              l.maxCharacterCount += sub.maxCharacterCount;
-              l.temp_subLocations.remove(sub);
-              j -= 1;
-            }
-          }
-          if (l.temp_subLocations.isEmpty()) {
-            locations.splice(i, 1);
-            i -= 1;
-          }
-        }
-      }
-    },
-
     alignPoints: function alignPoints() {
       // Determine column offsets for sublocations within locations.
       var xOffsets = {};
@@ -226,7 +113,6 @@
         while (p) {
           if (p.whenAndWhere == null) {
             p.coords.x = x;
-            console.log('Coords: ' + p.id + ': (' + p.coords.x + ', ' + p.coords.y + ')');
           }
           p = p.next;
         }
@@ -252,61 +138,107 @@
       }
     },
 
-    drawLocations: function drawLocations(locations, depth) {
-      for (var i = 0; i < locations.length; i++) {
-        var line = locations[i];
-        var p = line.start;
-        var topLeft = null;
-        while (p) {
-          console.log(line.thing.name + ': (' + p.coords.x + ', ' + p.coords.y + ')');
-          if (topLeft == null) {
-            topLeft = p.coords;
-          }
-
-          if (p.next == null || p.next.coords.x != p.coords.x || p.next.coords.y != p.coords.y + 1) {
-            console.log('Draw: ' + line.thing.name + ': (' + topLeft.x + ', ' + topLeft.y +
-                  ')-(' + (p.coords.x + line.maxCharacterCount - 1) + ', ' + p.coords.y + ')');
-            var externalFrames = depth * 6;
-            var x = topLeft.x * 100 + externalFrames;
-            var y = topLeft.y * 100 + externalFrames;
-            var w = line.maxCharacterCount * 100 - 2 * externalFrames;
-            var h = (p.coords.y - topLeft.y + 1) * 100 - 2 * externalFrames;
-            console.log(line.thing.name + ': (' + x + ', ' + y + '), ' + w + 'x' + h);
-            var color = line.thing.color || 'black';
-            this.ctx.font = '12pt Verdana, sans-serif';
-            this.ctx.fillStyle = color;
-            this.ctx.fillText(line.thing.name, x, y);
-            drawInsetBox(this.ctx, x, y, w, h, 5, color);
-            topLeft = null;
-          }
-          p = p.next;
+    drawTimelines: function drawTimelines(container, depth) {
+      for (var i = 0; i < container.contents.getLength(); i++) {
+        var line = container.contents.get(i);
+        if (line.isLocation()) {
+          this.drawLocation(line, depth);
+        } else {
+          this.drawObject(line);
         }
-        this.drawLocations(line.contents.list, depth + 1);
       }
     },
 
-    drawTimeline: function drawTimeline(timelineStart, index, color) {
-      this.ctx.strokeStyle = 'black';
-      var x = index * 100;
-      var point = timelineStart;
-      /*
-      while (point) {
-        var y = this.experiences[i].local_time;
-        this.experiences[i].coords = { x: x, y: y };
-        if (i + 1 < this.experiences.length) {
-          this.ctx.fillStyle = color;
-          var nextY = this.experiences[i + 1].local_time;
-          this.ctx.fillRect(x - 5, y, 10, nextY - y);
+    drawLocation: function drawLocation(line, depth) {
+      var p = line.start;
+      var topLeft = null;
+      while (p) {
+        var coords = { x: p.getColumn(), y: p.getRow() };
+        console.log(line.thing.name + ': (' + coords.x + ', ' + coords.y + ')');
+        if (topLeft == null) {
+          topLeft = coords;
         }
 
-        this.ctx.fillStyle = 'white';
-        console.log(y);
-        drawCircle(this.ctx, x, y, 10, true, true);
-        this.ctx.fillStyle = color;
-        drawCircle(this.ctx, x, y, 5, true, true);
+        if (p.next == null || p.next.getColumn() != topLeft.x) {
 
-        point = timelineStart.next;
-      }*/
+          console.log('Draw: ' + line.thing.name + ': (' + topLeft.x + ', ' + topLeft.y +
+                ')-(' + (coords.x + line.getWidth() - 1) + ', ' + coords.y + ')');
+          var externalFrames = depth * 6;
+          var corner = computeCellCenter(topLeft);
+          //corner.x += externalFrames;
+          corner.y -= 20;
+          var size = computeCellCenter({ x: line.getWidth(), y: coords.y - topLeft.y + 1 });
+          //size.x -= 2 * externalFrames;
+          size.y += 20;
+          var color = line.thing.color || 'black';
+          this.ctx.fillStyle = color;
+          drawLabel(this.ctx, line.thing.name, corner.x + size.x / 2, corner.y + 6);
+          drawInsetBox(this.ctx, corner.x, corner.y, size.x, size.y, 5, color);
+          topLeft = null;
+        }
+        p = p.next;
+      }
+      this.drawTimelines(line, depth + 1);
+    },
+
+    drawObject: function drawObject(line) {
+      this.ctx.strokeStyle = line.thing.color || 'black';
+      this.ctx.lineWidth = 6;
+      this.ctx.lineCap = 'round';
+      this.ctx.lineJoin = 'round';
+      this.ctx.beginPath();
+
+      var p = line.start;
+      var coords = computeCellCenter({ x: p.getColumn(), y: p.getRow() });
+      coords.y -= 1;
+      this.ctx.moveTo(coords.x, coords.y);
+      while (p) {
+        coords = computeCellCenter({ x: p.getColumn(), y: p.getRow() });
+        coords.y += 1;
+        this.ctx.lineTo(coords.x, coords.y);
+        p = p.next;
+      }
+      this.ctx.stroke();
+    },
+
+    drawEvents: function drawEvents() {
+      this.ctx.lineWidth = 1;
+      this.ctx.strokeStyle = 'black';
+      for (var i = 0; i < this.events.getLength(); i++) {
+        var e = this.events.get(i);
+        for (var j = 0; j < e.experiences.length; j++) {
+          var ex = e.experiences[j];
+          var coords = computeCellCenter({ x: ex.getColumn(), y: ex.getRow() });
+          this.ctx.fillStyle = 'white';
+          this.ctx.beginPath();
+          this.ctx.arc(coords.x, coords.y, 10, 0, Math.PI * 2);
+          this.ctx.stroke();
+          this.ctx.fill();
+          this.ctx.fillStyle = ex.timeline.thing.color || 'black';
+          this.ctx.beginPath();
+          this.ctx.arc(coords.x, coords.y, 5, 0, Math.PI * 2);
+          this.ctx.stroke();
+          this.ctx.fill();
+        }
+      }
+    },
+
+    drawGridPoints: function drawGridPoints() {
+      this.ctx.fillStyle = 'gray';
+      var cell = { x: 0, y: 0 };
+      var px = computeCellCenter(cell);
+      while (px.x < this.canvas[0].width) {
+        while (px.y < this.canvas[0].height) {
+          this.ctx.beginPath();
+          this.ctx.arc(px.x, px.y, 3, 0, Math.PI * 2);
+          this.ctx.fill();
+          cell.y += 1;
+          px = computeCellCenter(cell);
+        }
+        cell.y = 0;
+        cell.x += 1;
+        px = computeCellCenter(cell);
+      }
     }
   };
 
