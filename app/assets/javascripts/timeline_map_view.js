@@ -65,13 +65,14 @@
   TimelineMapView.prototype = {
     findClickableTarget: function findClickableTarget(ev) {
       var coords = this.toMapCoords({ x: ev.clientX, y: ev.clientY });
-      for (var id in this.experiences) {
-        if (!this.experiences.hasOwnProperty(id)) {
-          continue;
-        }
-        var ex = this.experiences[id];
-        if (ex.coords && getDistance(ex.coords, coords) <= 10) {
-          return ex;
+      for (var i = 0; i < this.events.getLength(); i++) {
+        var e = this.events.get(i);
+        for (var j = 0; j < e.experiences.length; j++) {
+          var ex = e.experiences[j];
+          var exCoords = computeCellCenter({ x: ex.getColumn(), y: ex.getRow() });
+          if (exCoords && getDistance(exCoords, coords) <= 10) {
+            return ex;
+          }
         }
       }
 
@@ -247,14 +248,14 @@
     var clickable = me.findClickableTarget(ev);
     me.canvas
       .toggleClass('clickable-hover', clickable != null)
-      .attr('title', clickable ? clickable.event.summary : '');
+      .attr('title', clickable ? clickable.events[0].summary : '');
   }
 
   function map_click(ev) {
     var me = ev.data.me;
     var ex = me.findClickableTarget(ev);
     if (ex) {
-      alert('Experience for ' + ex.thingInstance.spaceTime.name + '!' + ex.thingInstance.thing.name + ': ' + ex.event.summary + '\n\t' + ex.event.descriptions.join('\n\t'));
+      alert('Experience for ' + ex.timeline.getName() + ': ' + ex.events[0].summary + '\n\t' + ex.events[0].details.join('\n\t'));
     }
   }
 

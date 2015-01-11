@@ -4,6 +4,7 @@
     this.row = null;
     this.column = null;
     this.characterOrObjectCount = null;
+    this.events = [];
 
     var me = this;
     M.models.Timeline.cache.getWhenReady(this.thing_instance_id, function (x) {

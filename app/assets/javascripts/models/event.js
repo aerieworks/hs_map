@@ -7,6 +7,7 @@
     for (var i = 0; i < this.timeline_point_ids.length; i++) {
       M.models.TimelinePoint.cache.getWhenReady(this.timeline_point_ids[i], function (x) {
         me.experiences.push(x);
+        x.events.push(me);
       });
     }
   }
