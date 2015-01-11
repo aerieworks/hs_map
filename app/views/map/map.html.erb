@@ -1,9 +1,10 @@
-<canvas id="mapCanvas" width="1000" height="500"></canvas>
+<canvas id="mainTimelineMapView" width="1000" height="1000" class="dynamic-control" data-control-type="timeline-map-view">
+</canvas>
 <script>
-  window.hsMapData = {
-    events: <%=h @events.to_json(methods: :descriptions, include: :event_participants).html_safe %>,
-    spaceTimes: <%=h @space_times.to_json.html_safe %>,
-    things: <%=h @things.to_json(include: :instances).html_safe %>,
-    containers: <%=h @containers.to_json.html_safe %>
+  window.Mapstuck.data['mainTimelineMapView'] = {
+    events: <%= raw @events.active_model_serializer.new(@events).to_json %>,
+    spaceTimes: <%= raw @space_times.active_model_serializer.new(@space_times).to_json %>,
+    things: <%= raw @things.active_model_serializer.new(@things).to_json %>,
+    timelinePoints: <%= raw @timeline_points.active_model_serializer.new(@timeline_points).to_json %>
   };
 </script>

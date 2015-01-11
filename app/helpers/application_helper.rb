@@ -3,23 +3,6 @@ module ApplicationHelper
     send("describe_#{model.class.name.tableize.singularize}", model, *args)
   end
 
-  def display_time(o, time_symbol)
-    time = o[time_symbol]
-    is_known = o["is_#{time_symbol}_known".to_sym]
-    label = TimeLabel.find_by sequence_index: time
-    "#{label.nil? ? time.to_s : label.description}#{is_known ? '' : '(?)'}"
-  end
-
-  def time_editor(form, field, skip_certainty=false)
-    content = form.number_field(field, minimum: 0, step: 1)
-    if not skip_certainty
-      is_known_field = "is_#{field}_known".to_sym
-      content += form.check_box(is_known_field) + form.label(is_known_field, 'Known?', class: 'entity-checkbox-label')
-    end
-
-    return content
-  end
-
   def group_by(enumerable, grouper)
     is_grouper_lambda = grouper.respond_to? :call
     enumerable.each_with_object({}) do |x, m|

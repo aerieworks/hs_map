@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150110085748) do
+ActiveRecord::Schema.define(version: 20150111034848) do
 
   create_table "event_experiences", force: :cascade do |t|
     t.integer  "event_id",          limit: 4, null: false
@@ -86,6 +86,7 @@ ActiveRecord::Schema.define(version: 20150110085748) do
     t.integer  "category",   limit: 4,  null: false
     t.datetime "created_at",            null: false
     t.datetime "updated_at",            null: false
+    t.string   "color",      limit: 30
   end
 
   create_table "timeline_points", force: :cascade do |t|

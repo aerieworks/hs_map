@@ -3,6 +3,7 @@ class Thing < ActiveRecord::Base
   has_many :instances, class_name: "ThingInstance"
 
   validates :name, presence: true, length: { maximum: 50 }
+  validates :color, length: { maximum: 30 }
   validates :category, presence: true
   validates_associated :instances
 

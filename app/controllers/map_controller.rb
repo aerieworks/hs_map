@@ -3,9 +3,10 @@ class MapController < ApplicationController
   end
 
   def map
-    @space_times = to_map SpaceTime.all
-    @things = to_map Thing.includes(:instances).all
-    @events = to_map Event.includes(:sub_events, :event_experiences).all
+    @space_times = SpaceTime.all
+    @things = Thing.includes(:instances).all
+    @events = Event.includes(:sub_events, :event_experiences).all
+    @timeline_points = TimelinePoint.all
 
     @containers = { '' => [] }
     @thing_instances = to_map ThingInstance.all

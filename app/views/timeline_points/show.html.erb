@@ -3,7 +3,7 @@
 
 <div class="entity-field">
   <label>On Timeline For</label>
-  <span class="entity-field-value"><%= describe(@timeline_point.thing_instance) %></span>
+  <span class="entity-field-value"><%= link_to describe(@timeline_point.thing_instance), @timeline_point.thing_instance.thing %></span>
 </div>
 <div class="entity-field">
   <label>Description</label>

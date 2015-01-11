@@ -6,6 +6,10 @@
     <%= f.label :category %>
     <%= f.select :category, Hash[Thing.categories.keys.collect { |x| [x.capitalize, x] }] %>
   </div>
+  <div class="entity-field">
+    <%= f.label :color %>
+    <%= f.text_field :color %>
+  </div>
   <% locations = thing_instances_for_selection(@locations, allow_nil: true) %>
   <%= editor_for_each 'Instances', f, :instances,
     { space_times: space_times, locations: locations } %>

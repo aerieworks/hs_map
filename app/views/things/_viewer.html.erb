@@ -3,6 +3,13 @@
   <span class="entity-field-value"><%= thing.category.humanize %></span>
 </div>
 <div class="entity-field">
+  <label>Color</label>
+  <span class="entity-field-value"><%= thing.color %></span>
+  <% unless thing.color.blank? %>
+    <span class="thing-color-sample" style="background-color: <%= thing.color %>"></span>
+  <% end %>
+</div>
+<div class="entity-field">
   <label>Instances</label>
   <span class="entity-field-value-list">
     <% thing.instances.each do |x| %>
