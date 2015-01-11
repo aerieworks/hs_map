@@ -19,15 +19,15 @@
     return { x: cellCorner.x + GRID_CELL_WIDTH / 2, y: cellCorner.y + GRID_CELL_HEIGHT / 2 };
   }
 
-  function TimelineMapView(canvas) {
-    this.canvas = canvas;
-    this.ctx = canvas[0].getContext('2d');
+  function TimelineMapView(control) {
+    this.canvas = $('canvas', control);
+    this.ctx = this.canvas[0].getContext('2d');
 
-    this.events = toModels(canvas.data('events'), M.models.Event);
-    this.spaceTimes = toModels(canvas.data('spaceTimes'), M.models.SpaceTime);
-    this.things = toModels(canvas.data('things'), M.models.Thing);
-    this.timelines = toModels(canvas.data('timelines'), M.models.Timeline);
-    this.timelinePoints = toModels(canvas.data('timelinePoints'), M.models.TimelinePoint);
+    this.events = toModels(control.data('events'), M.models.Event);
+    this.spaceTimes = toModels(control.data('spaceTimes'), M.models.SpaceTime);
+    this.things = toModels(control.data('things'), M.models.Thing);
+    this.timelines = toModels(control.data('timelines'), M.models.Timeline);
+    this.timelinePoints = toModels(control.data('timelinePoints'), M.models.TimelinePoint);
     this.nowhere = new M.models.Thing({ id: -1, name: 'Nowhere', category: 'location' });
     this.never = new M.models.SpaceTime({ id: -1, name: 'Never' });
     this.void = new M.models.Timeline({ id: null, thing_id: -1, space_time_id: -1 });
@@ -39,7 +39,26 @@
       }
     }
 
-    // Force width calculation.
+    // Calculate canvas size requirements.
+    var gridWidth = this.void.getWidth();
+    var gridHeight = 0;
+    for (var i = 0; i < this.void.contents.getLength(); i++) {
+      var line = this.void.contents.get(i);
+      var p = line.start;
+      while (p) {
+        if (!p.whenAndWhere && p.getRow() > gridHeight) {
+          gridHeight = p.getRow();
+        }
+        p = p.next;
+      }
+    }
+    gridHeight += 2;
+
+    console.log('Grid: ' + gridWidth + 'x' + gridHeight);
+    this.canvas
+      .prop('width', gridWidth * GRID_CELL_WIDTH)
+      .prop('height', gridHeight * GRID_CELL_HEIGHT);
+
     M.models.Timeline.cache.each(function (i, l) { l.getWidth(); });
     var me = this;
     this.timelines.each(function (index, line) {
@@ -166,11 +185,8 @@
                 ')-(' + (coords.x + line.getWidth() - 1) + ', ' + coords.y + ')');
           var externalFrames = depth * 6;
           var corner = computeCellCenter(topLeft);
-          //corner.x += externalFrames;
           corner.y -= 20;
-          var size = computeCellCenter({ x: line.getWidth(), y: coords.y - topLeft.y + 1 });
-          //size.x -= 2 * externalFrames;
-          size.y += 20;
+          var size = computeCellCorner({ x: line.getWidth() - 1, y: coords.y - topLeft.y + 1 });
           var color = line.thing.color || 'black';
           this.ctx.fillStyle = color;
           drawLabel(this.ctx, line.thing.name, corner.x + size.x / 2, corner.y + 6);
@@ -326,8 +342,8 @@
     }
   }
 
-  function initializeTimelineMapView(canvas) {
-    new TimelineMapView(canvas);
+  function initializeTimelineMapView(control) {
+    new TimelineMapView(control);
   }
 
   M.ui.registerControl('timeline-map-view', initializeTimelineMapView);

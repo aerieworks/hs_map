@@ -1,5 +1,6 @@
-<canvas id="mainTimelineMapView" width="1000" height="1000" class="timeline-map-view dynamic-control" data-control-type="timeline-map-view">
-</canvas>
+<div id="mainTimelineMapView" class="dynamic-control" data-control-type="timeline-map-view">
+  <canvas class="timeline-map-canvas"></canvas>
+</div>
 <script>
   window.Mapstuck.data['mainTimelineMapView'] = {
     events: <%= raw @events.active_model_serializer.new(@events).to_json %>,

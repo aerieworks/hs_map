@@ -7,16 +7,23 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
-
-  <h1>
-    <%= link_to 'Homestuck Maps', '/' %> &gt; <%= link_to 'Editor', edit_map_path %>
-    <% if not @breadcrumbs.nil? %>
-      <% @breadcrumbs.each do |crumb| %>
-        &gt; <%= link_to crumb[:text], crumb[:path] %>
+  <header>
+    <h1>
+      <%= link_to 'Homestuck Maps', '/' %> &gt; <%= link_to 'Editor', edit_map_path %>
+      <% if not @breadcrumbs.nil? %>
+        <% @breadcrumbs.each do |crumb| %>
+          &gt; <%= link_to crumb[:text], crumb[:path] %>
+        <% end %>
       <% end %>
-    <% end %>
-  </h1>
-<%= yield %>
+    </h1>
+  </header>
 
+  <div class="content">
+    <%= yield %>
+  </div>
+
+  <div class="popover-container">
+    <%= content_for :popovers %>
+  </div>
 </body>
 </html>
