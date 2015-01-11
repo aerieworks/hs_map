@@ -74,22 +74,6 @@
     this.alignPoints();
     this.drawLocations(this.nowhere.contents.list, 0);
 
-    var rose = 'rgba(181, 54, 218, 0.8)';
-
-    drawInsetBox(this.ctx, 500, 0, 200, 400, 5, rose);
-
-    var colors = [ '#b536da', '#ff6ff2', 'purple' ];
-    var index = 0;
-    for (var i = 0; i < this.timelines.length; i++) {
-      var timeline = this.timelines[i];
-      if (timeline.thing.category == 'character') {
-        console.log('Rendering events for ' + timeline.spaceTime.name + '!' +
-            timeline.thing.name);
-        //this.drawTimeline(timelineStart, index, colors[index]);
-        index += 1;
-      }
-    }
-
     this.canvas
       .bind('mousemove', { me: this }, map_mouseover)
       .bind('click', { me: this }, map_click);
