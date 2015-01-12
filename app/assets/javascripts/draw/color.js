@@ -124,7 +124,8 @@
     setBlue: setBlue,
     setGreen: setGreen,
     setRed: setRed,
-    toCss: toCss
+    toCss: toCss,
+    toStyle: toCss
   };
 
   for (var name in namedColors) {
@@ -133,6 +134,6 @@
     }
   }
 
-  M.Color = Color;
+  M.draw.Color = Color;
 })(window.Mapstuck, jQuery);
 

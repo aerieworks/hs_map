@@ -97,6 +97,7 @@
   window.Mapstuck = {
     Set: Set,
     data: {},
+    draw: {},
     models: {},
     ui: {
       registerControl: registerDynamicControl,

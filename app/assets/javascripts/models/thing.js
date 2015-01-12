@@ -3,7 +3,7 @@
   function Thing(model) {
     $.extend(this, model);
     if (this.color) {
-      this.color = new M.Color(this.color);
+      this.color = new M.draw.Color(this.color);
     }
     Thing.cache.put(this);
   }
