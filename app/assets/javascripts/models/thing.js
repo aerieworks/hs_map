@@ -1,6 +1,10 @@
 (function (M, $) {
+
   function Thing(model) {
     $.extend(this, model);
+    if (this.color) {
+      this.color = new M.Color(this.color);
+    }
     Thing.cache.put(this);
   }
 

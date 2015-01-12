@@ -1,6 +1,19 @@
 // Place all the styles related to the Map controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+.timeline-map-view {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: scroll;
+}
+
+.timeline-map-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
 .timeline-map-canvas.clickable-hover {
   cursor: pointer;
 }
