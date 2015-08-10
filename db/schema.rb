@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150111034848) do
+ActiveRecord::Schema.define(version: 20150726012305) do
 
   create_table "event_experiences", force: :cascade do |t|
     t.integer  "event_id",          limit: 4, null: false
@@ -24,9 +24,10 @@ ActiveRecord::Schema.define(version: 20150111034848) do
   add_index "event_experiences", ["timeline_point_id"], name: "index_event_experiences_on_timeline_point_id", using: :btree
 
   create_table "events", force: :cascade do |t|
-    t.string   "summary",    limit: 50, null: false
-    t.datetime "created_at",            null: false
-    t.datetime "updated_at",            null: false
+    t.string   "summary",     limit: 50,  null: false
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+    t.string   "description", limit: 255
   end
 
   create_table "group_members", force: :cascade do |t|
@@ -95,6 +96,9 @@ ActiveRecord::Schema.define(version: 20150111034848) do
     t.integer "next_id",           limit: 4
     t.integer "thing_instance_id", limit: 4
     t.integer "when_and_where_id", limit: 4
+    t.integer "previous_distance", limit: 4
+    t.integer "next_distance",     limit: 4
+    t.integer "order",             limit: 4
   end
 
   add_index "timeline_points", ["next_id"], name: "index_timeline_points_on_next_id", using: :btree

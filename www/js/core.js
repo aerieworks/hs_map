@@ -1,5 +1,7 @@
+'use strict';
 (function ($) {
   var dynamicControls = {};
+  var controlInstances = [];
 
   var Set = (function () {
     function Set(contents, keyName) {
@@ -136,11 +138,25 @@
     }
   }
 
-  function registerDynamicControl(type, fn) {
-    dynamicControls[type] = fn;
+  function toFriendlyName(name) {
+    return name.replace(/[a-z][A-Z]/, function (x) {
+      return x.charAt(0) + ' ' + x.charAt(1);
+    });
   }
 
-  function initializeUi(root) {
+  function toPluralProperty(name) {
+    return name.charAt(0).toLowerCase() + name.substring(1) + 's';
+  }
+
+  function registerDynamicControl(fn) {
+    dynamicControls[fn.name] = fn;
+  }
+
+  function initialize(env, root) {
+    initializeUi(env, root || $('body'));
+  }
+
+  function initializeUi(env, root) {
     $('.dynamic-control', root).each(function (index, el) {
       var node = $(el);
       if (!node.data('control-bound')) {
@@ -148,12 +164,7 @@
         if (dynamicControls[type]) {
           var id = node.prop('id');
           console.log('Binding ' + id + ' as ' + type);
-
-          if (Mapstuck.data.hasOwnProperty(id)) {
-            node.data(Mapstuck.data[id]);
-          }
-
-          dynamicControls[type](node);
+          controlInstances.push(new dynamicControls[type](env, node));
           node.data('control-bound', true);
         }
       }
@@ -177,12 +188,11 @@
     extend: extend,
     models: {},
     parseScalar: parseScalar,
+    initialize: initialize,
+    toFriendlyName: toFriendlyName,
+    toPluralProperty: toPluralProperty,
     ui: {
-      registerControl: registerDynamicControl,
-      initialize: initializeUi
+      registerControl: registerDynamicControl
     }
   };
 })(jQuery);
-jQuery(function ($) {
-  window.Mapstuck.ui.initialize($('body'));
-});

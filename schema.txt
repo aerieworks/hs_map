@@ -1,0 +1,38 @@
+timelines
+  id
+  universe_id
+  name        "Alpha", "Terezi Tricks John", "Game Over"
+
+universes
+  id
+  name        "Beforus", "Alternia", "Pre-Scratch Earth", "Post-Scratch Earth"
+
+things
+  id
+  name
+  category
+
+thing_instances
+  id
+  thing_id
+  source_spacetime_id
+  friendly_name
+
+timeline_points
+  id
+  thing_instance_id
+  timeline_id
+  when_and_where_id
+  label
+  previous
+  previous_distance
+  next
+  next_distance
+
+events
+  id
+  description
+
+experiences
+  timeline_point_id
+  description

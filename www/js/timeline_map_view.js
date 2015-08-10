@@ -1,3 +1,4 @@
+'use strict';
 (function (M, $) {
   var GRID_CELL_WIDTH = 50;
   var GRID_CELL_HEIGHT = 50;
@@ -18,20 +19,21 @@
     return computeCellCorner(coords).add(GRID_CELL_WIDTH / 2, GRID_CELL_HEIGHT / 2);
   }
 
-  function TimelineMapView(control) {
+  function TimelineMapView(env, control) {
+    this.env = env;
     this.timelineCanvas = $('.timeline-map-timeline-layer', control);
     this.labelCanvas = $('.timeline-map-label-layer', control);
     this.timelineCtx = new M.draw.Context2d(this.timelineCanvas);
     this.labelCtx = new M.draw.Context2d(this.labelCanvas);
 
-    this.events = toModels(control.data('events'), M.models.Event);
-    this.spaceTimes = toModels(control.data('spaceTimes'), M.models.SpaceTime);
-    this.things = toModels(control.data('things'), M.models.Thing);
-    this.timelines = toModels(control.data('timelines'), M.models.Timeline);
-    this.timelinePoints = toModels(control.data('timelinePoints'), M.models.TimelinePoint);
+    this.events = env.events.getAll()
+    this.spaceTimes = env.spaceTimes.getAll();
+    this.things = env.things.getAll();
+    this.timelines = env.timelines.getAll();
+    this.timelinePoints = env.timelinePoints.getAll();
     this.nowhere = new M.models.Thing({ id: -1, name: 'Nowhere', category: 'location' });
     this.never = new M.models.SpaceTime({ id: -1, name: 'Never' });
-    this.void = new M.models.Timeline({ id: null, thing_id: -1, space_time_id: -1 });
+    this.void = new M.models.Timeline({ id: -1, thing: this.nowhere, spaceTime: this.never });
 
     for (var i = 0; i < this.timelinePoints.getLength(); i++) {
       var p = this.timelinePoints.get(i);
@@ -64,8 +66,6 @@
       .prop('width', gridWidth * GRID_CELL_WIDTH)
       .prop('height', gridHeight * GRID_CELL_HEIGHT);
 
-    M.models.Timeline.cache.each(function (i, l) { l.getWidth(); });
-    var me = this;
     this.timelines.each(function (index, line) {
       console.log(line.getName() + ': ' + line.getWidth());
       var p = line.start;
@@ -310,9 +310,5 @@
     }
   }
 
-  function initializeTimelineMapView(control) {
-    new TimelineMapView(control);
-  }
-
-  M.ui.registerControl('timeline-map-view', initializeTimelineMapView);
+  M.ui.registerControl(TimelineMapView);
 })(window.Mapstuck, jQuery);

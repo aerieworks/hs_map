@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Mapstuck</title>
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+  <link rel="stylesheet" media="all" href="css/core.css">
+  <link rel="stylesheet" media="all" href="css/map.css">
+  <link rel="stylesheet" media="all" href="css/entity.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+  <script src="js/core.js"></script>
+  <script src="js/cache.js"></script>
+  <script src="js/entity.js"></script>
+  <script src="js/point.js"></script>
+  <script src="js/timeline_points.js"></script>
+  <script src="js/data/local_storage_repository.js"></script>
+  <script src="js/models/event.js"></script>
+  <script src="js/models/space_time.js"></script>
+  <script src="js/models/thing.js"></script>
+  <script src="js/models/timeline.js"></script>
+  <script src="js/models/timeline_point.js"></script>
+  <script src="js/draw/box.js"></script>
+  <script src="js/draw/circle.js"></script>
+  <script src="js/draw/color.js"></script>
+  <script src="js/draw/context.js"></script>
+  <script src="js/draw/drawable.js"></script>
+  <script src="js/draw/gradient.js"></script>
+  <script src="js/draw/gradient_line.js"></script>
+  <script src="js/draw/label.js"></script>
+  <script src="js/draw/linear_gradient.js"></script>
+  <script src="js/timeline_map_view.js"></script>
+  <script src="js/ui/entity_editor.js"></script>
+  <script src="js/ui/event_editor.js"></script>
+</head>
+<body>
+  <header>
+    <h1 class="title">
+      <a href="#">Mapstuck</a>
+    </h1>
+    <ul class="actions">
+      <li><button type="button" id="btnAddEvent">Add Event</button></li>
+      <li><button type="button" id="btnAddThing">Add Thing</button></li>
+    </ul>
+  </header>
+
+  <div class="content">
+    <div id="mainTimelineMapView" class="timeline-map-view dynamic-control" data-control-type="TimelineMapView">
+      <canvas class="timeline-map-canvas timeline-map-timeline-layer"></canvas>
+      <canvas class="timeline-map-canvas timeline-map-label-layer"></canvas>
+    </div>
+    <script>
+      'use strict';
+      jQuery(function ($) {
+        var M = window.Mapstuck;
+        var env = {};
+        env.events = new (M.data.LocalStorageRepository)(env, M.models.Event);
+        env.spaceTimes = new M.data.LocalStorageRepository(env, M.models.SpaceTime);
+        env.things = new M.data.LocalStorageRepository(env, M.models.Thing);
+        env.timelines = new M.data.LocalStorageRepository(env, M.models.Timeline);
+        env.timelinePoints = new M.data.LocalStorageRepository(env, M.models.TimelinePoint);
+        M.initialize(env);
+
+        var eventEditor = new M.ui.EventEditor(env, $('#eventEditor'));
+        $('#btnAddEvent').click(function () { eventEditor.edit(); });
+
+        console.log('Loading Complete');
+      });
+    </script>
+  </div>
+
+  <div id="eventEditor" class="dialog dialog-event-editor" data-control-type="EventEditor">
+    <div class="editor-field-container">
+      <label for="description" class="editor-field-label">Description:</label>
+      <input type="text" name="description" class="editor-field" size="50" />
+    </div>
+  </div>
+</body>
+</html>

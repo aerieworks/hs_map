@@ -1,0 +1,16 @@
+.timeline-map-view {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: scroll;
+}
+
+.timeline-map-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.timeline-map-canvas.clickable-hover {
+  cursor: pointer;
+}

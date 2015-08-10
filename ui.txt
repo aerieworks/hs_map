@@ -1,0 +1,12 @@
+When:
+- (just/hours/days/months/years/many years) (before/after) X
+- At the same time as X
+
+New Event:
+- Description
+- Add experience(s):
+  - Who
+    - When
+  - Immediate location
+    - When (optional)
+  - Univer

@@ -1,0 +1,13 @@
+ul.timeline-point {
+  margin: 0;
+  padding: 0;
+}
+
+ul.timeline-point > li {
+  margin-left: 25px;
+}
+
+ul.timeline-point > li:first-child {
+  margin-left: 0;
+  list-style-type: none;
+}

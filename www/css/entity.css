@@ -1,0 +1,41 @@
+.entity-child-list > h3 {
+  margin: 10px 0 0;
+}
+
+.entity-child {
+  margin-bottom: 20px;
+}
+
+.entity-field {
+  margin: 2px 0;
+}
+
+.entity-field > label,
+.field_with_errors > label {
+  display: inline-block;
+  width: 175px;
+  font-weight: bold;
+}
+
+label.entity-checkbox-label {
+  display: inline;
+  font-weight: normal;
+}
+
+.entity-field > textarea,
+.field_with_errors > textarea {
+  vertical-align: top;
+}
+
+.field_with_errors {
+  display: inline-block;
+}
+
+.field_with_errors > input,
+.field_with_errors > select, {
+  border: 1px solid #ff0000;
+}
+
+.entity-field > ul {
+  margin-top: 0;
+}
