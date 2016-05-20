@@ -1,0 +1,106 @@
+[
+"// B1",
+{"id":1,"thing":3,"what":[
+    {"id":1,"when":"1995-12-01"},
+    {"id":2,"when":"1995-12-03"},
+    {"id":3,"when":"1995-12-04"}
+    {"id":10,"when":"1996-04-13"},
+    {"id":16,"when":"2009-04-13T16:13-0700"},
+    {"id":17,"when":"2009-04-13","rel":"hours later"},
+    {"id":18,"when":"2009-04-13","rel":"minutes later"},
+    {"id":19,"when":"2009-04-13","rel":"minutes later"},
+  ]
+},
+"// B1 Earth",
+{"id":2,"thing":128,"what":[
+    {"id":4,"when":1},
+    {"id":5,"when":2},
+    {"id":6,"when":3},
+    {"id":11,"when":10},
+    {"id":20,"when":16},
+    {"id":21,"when":17},
+    {"id":22,"when":18},
+    {"id":23,"when":19}
+  ]
+},
+"// Maple Valley",
+{"id":3,"thing":135,"what":[
+    {"id":9,"when":6},
+    {"id":12,"when":11},
+    {"id":24,"when":20},
+    {"id":45,"when":23}
+  ]
+},
+"// John's House",
+{"id":4,"thing":134,"what":[
+    {"id":28,"when":24},
+    {"id":46,"when":45}
+  ]
+},
+"// John",
+{"id":5,"thing":47,"what":[
+    {"id":15,"ev":4,"when":12},
+    {"id":32,"ev":5,"when":28},
+    {"id":47,"ev":8,"when":46}
+  ]
+},
+"// Upstate New York",
+{"id":6,"thing":139,"what":[
+    {"id":29,"when":20}
+    {"id":27,"when":21}
+  ]
+},
+"// Rose's Mansion",
+{"id":7,"thing":140,"what":[
+    {"id":30,"when":29},
+    {"id":31,"when":27}
+  ]
+},
+"// Rose",
+{"id":8"thing":48,"what":[
+    {"id":15,"ev":4,"when":9},
+    {"id":33,"ev":5,"when":30},
+    {"id":34,"ev":6,"when":31}
+  ]
+},
+"// Houston",
+{"id":9,"thing":137,"what":[
+    {"id":7,"when":4},
+    {"id":35,"when":27},
+    {"id":25,"when":22}
+  ]
+},
+"// Dave's Apartment",
+{"id":10,"thing":141,"what":[
+    {"id":36,"when":35},
+    {"id":37,"when":25}
+  ]
+},
+"// Dave",
+{"id":11,"thing":49,"what":[
+    {"id":13,"ev":2,"when":7},
+    {"id":38,"ev":6,"when":36},
+    {"id":39,"ev":7,"when":37},
+  ]
+},
+"// Frog Temple Island",
+{"id":12,"thing":138,"what":[
+    {"id":8,"when":5},
+    {"id":40,"when":22},
+    {"id":26,"when":23}
+  ]
+},
+"// Jade's Tower",
+{"id":13"thing":142,"what":[
+    {"id":41,"when":40},
+    {"id":42,"when":26}
+  ]
+},
+"// Jade",
+{"id:14,"thing":50,"what":[
+    {"id":14,"ev":3,"when":8},
+    {"id":43,"ev":7,"when":41},
+    {"id":44,"ev":8,"when":42}
+  ]
+}
+]

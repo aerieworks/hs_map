@@ -3,6 +3,88 @@
   var dynamicControls = {};
   var controlInstances = [];
 
+  var Logger = (function () {
+    var LogLevel = {
+      Debug: { value: 0, label: 'DEBUG' },
+      Info: { value: 1, label: 'INFO' },
+      Warn: { value: 2, label: 'WARN' },
+      Error: { value: 3, label: 'ERROR' }
+    };
+
+    var globalLogLevel = LogLevel.Warn;
+
+    function Logger(contextName, logLevel) {
+      this.contextName = contextName;
+      this.logLevel = logLevel || null;
+    }
+
+    var callerRegEx = /^\s*at\s*([^\(]+)\s+\(/;
+    function getCaller() {
+      var caller = null;
+      var stackTrace = (new Error()).stack;
+      if (stackTrace) {
+        var match = callerRegEx.exec(stackTrace.split('\n')[3]);
+        if (match) {
+          caller = match[1];
+        }
+      }
+
+      return caller || '<unknown>';
+    }
+
+    function log(logger, level, args) {
+      var currentLevel = logger.logLevel || globalLogLevel;
+      if (level.value >= currentLevel.value) {
+        if (args.length == 3 && typeof args[2] == 'function') {
+          args = args[2].call(null);
+          if (!$.isArray(args)) {
+            args = [ args ];
+          }
+        }
+        args.concat([
+          (new Date()).toString(),
+          '[', currentLevel.label, ']',
+          logger.contextName, getCaller(), '-'
+        ]);
+        console.log.apply(console, args);
+      }
+    }
+
+    Logger.prototype = $.extend(new Object(), {
+      debug:
+        function debug(message) {
+          return log(this, LogLevel.Debug, arguments);
+        },
+
+      error:
+        function error(message) {
+          return log(this, LogLevel.Error, arguments);
+        },
+
+      info:
+        function info(message) {
+          return log(this, LogLevel.Info, arguments);
+        },
+
+      warn:
+        function warn(message) {
+          return log(this, LogLevel.Warn, arguments);
+        }
+    });
+
+    Logger.LogLevel = LogLevel;
+    Logger.setGlobalLogLevel = function setGlobalLogLevel(level) {
+      if (level != LogLevel.Debug && level != LogLevel.Info && level != LogLevel.Warn &&
+          level != LogLevel.Error) {
+        throw new Error('Invalid log level: ' + (level == null ? '<null>' : level.toString()));
+      }
+
+      globalLogLevel = level;
+    };
+
+    return Logger;
+  })();
+
   var Set = (function () {
     function Set(contents, keyName) {
       this.keyName = keyName || 'id';
@@ -179,7 +261,12 @@
     }
   }
 
+  function virtualStub() {
+    throw "Function must be implemented by subclass.";
+  }
+
   window.Mapstuck = {
+    Logger: Logger,
     Set: Set,
     addGetterSetters: addGetterSetters,
     addWrappers: addWrappers,
@@ -193,6 +280,7 @@
     toPluralProperty: toPluralProperty,
     ui: {
       registerControl: registerDynamicControl
-    }
+    },
+    virtualStub: virtualStub
   };
 })(jQuery);

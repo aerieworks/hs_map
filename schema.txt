@@ -1,3 +1,10 @@
+Queries
+=======
+- Get all events at time = X, +/- Y
+- ...involving things A and B
+- ...in location M
+- ...in timeline Q
+
 timelines
   id
   universe_id

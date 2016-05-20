@@ -6,7 +6,10 @@
   <link rel="stylesheet" media="all" href="css/core.css">
   <link rel="stylesheet" media="all" href="css/map.css">
   <link rel="stylesheet" media="all" href="css/entity.css">
+  <!--
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  -->
+  <script src="js/lib/jquery-2.1.1.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
   <script src="js/core.js"></script>
   <script src="js/cache.js"></script>
@@ -29,8 +32,10 @@
   <script src="js/draw/label.js"></script>
   <script src="js/draw/linear_gradient.js"></script>
   <script src="js/timeline_map_view.js"></script>
-  <script src="js/ui/entity_editor.js"></script>
-  <script src="js/ui/event_editor.js"></script>
+  <script src="js/ui/editor.js"></script>
+  <script src="js/ui/timeline_point_selector.js"></script>
+  <script src="js/ui/entity_editor_dialog.js"></script>
+  <script src="js/ui/event_editor_dialog.js"></script>
 </head>
 <body>
   <header>
@@ -40,6 +45,7 @@
     <ul class="actions">
       <li><button type="button" id="btnAddEvent">Add Event</button></li>
       <li><button type="button" id="btnAddThing">Add Thing</button></li>
+      <li><button type="button" id="btnLoad" class="file-button">Load<input type="file" id="fileLoad"></input></button>
     </ul>
   </header>
 
@@ -60,7 +66,7 @@
         env.timelinePoints = new M.data.LocalStorageRepository(env, M.models.TimelinePoint);
         M.initialize(env);
 
-        var eventEditor = new M.ui.EventEditor(env, $('#eventEditor'));
+        var eventEditor = new M.ui.EventEditorDialog(env, $('#eventEditor'));
         $('#btnAddEvent').click(function () { eventEditor.edit(); });
 
         console.log('Loading Complete');
@@ -68,7 +74,7 @@
     </script>
   </div>
 
-  <div id="eventEditor" class="dialog dialog-event-editor" data-control-type="EventEditor">
+  <div id="eventEditor" class="dialog dialog-event-editor" data-control-type="EventEditorDialog">
     <div class="editor-field-container">
       <label for="description" class="editor-field-label">Description:</label>
       <input type="text" name="description" class="editor-field" size="50" />
